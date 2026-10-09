@@ -9,7 +9,7 @@ import * as sound from './sound.js';
 import * as store from './storage.js';
 
 const $ = (sel) => document.querySelector(sel);
-const REMINDERS = [15, 10, 5]; // Minuten vor Ende
+const REMINDERS = [15, 10, 5, 1]; // Minuten vor Ende
 const DURATIONS = [5, 10, 15, 20, 30, 45, 60, 90];
 const PIN_LENGTH = 4;
 const MAX_TRIES = 3;
@@ -99,7 +99,7 @@ function showReminder(minutes) {
   $('#reminder-pie').innerHTML = pieSVG(remaining() / timer.total, minutes);
   box.hidden = false;
   sound.chime();
-  say(`Noch ${minutes} Minuten, dann ist Schluss für heute.`);
+  say(minutes === 1 ? 'Noch eine Minute, dann ist Schluss für heute.' : `Noch ${minutes} Minuten, dann ist Schluss für heute.`);
   clearTimeout(reminderTimeout);
   reminderTimeout = setTimeout(hideReminder, 7000);
 }

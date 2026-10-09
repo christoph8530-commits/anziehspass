@@ -41,7 +41,7 @@ Oben rechts auf dem Startbildschirm ist die Stoppuhr ⏱️. Sie öffnet den Elt
    Gespeichert wird nur ein Hash auf dem Gerät, die PIN steht nirgends im Code.
 2. **Timer starten:** 5 bis 90 Minuten wählen. Oben läuft ein farbiger Balken mit
    (grün, ab 10 Minuten gelb, ab 5 Minuten rot).
-3. **Erinnerungen** bei 15, 10 und 5 Minuten: grosse Uhr mit Restzeit, Glocke und Stimme
+3. **Erinnerungen** bei 15, 10, 5 und 1 Minute: grosse Uhr mit Restzeit, Glocke und Stimme
    («Noch 5 Minuten, dann ist Schluss für heute»). Antippen schliesst sie.
 4. **Zeit um:** Sperrbildschirm mit Mond. Er bleibt auch nach dem Schliessen und
    Neustarten der App bestehen. Entsperren über das Schloss 🔒 unten rechts und die PIN.
