@@ -16,13 +16,13 @@ Technisch ist es eine Web-App (PWA) aus reinem HTML, CSS und JavaScript, ohne Bu
 
 | Symbol | Funktion |
 |---|---|
-| Figur antippen | Schweinchen, Welpe oder Häschen auswählen |
+| Figur antippen | Schweinchen, Welpe, Häschen, Elefant oder Siebenschläfer auswählen |
 | 👒 👓 👗 🧣 👟 🧸 | Kategorie wählen (Kopf, Augen, Kleider, Hals und Rücken, Schuhe, Spielsachen) |
 | Teil unten antippen | anziehen; nochmals antippen = ausziehen |
 | Teil an der Figur antippen | ausziehen |
 | 🎲 | zufällig anziehen |
 | 🧹 | alles ausziehen |
-| 📷 | Look speichern: das Foto fliegt in die Galerie 🖼️ |
+| 💾 | Look speichern: er fliegt in die Galerie 🖼️ |
 | 🖼️ | Galerie; Bild antippen = Look wieder anziehen |
 | ▶️ (in der Galerie) | **Modenschau**: alle Looks laufen nacheinander über den Laufsteg, mit Fanfare und Konfetti. Antippen = nächster Look |
 | 🏠 | zurück |
@@ -30,7 +30,7 @@ Technisch ist es eine Web-App (PWA) aus reinem HTML, CSS und JavaScript, ohne Bu
 **Elternmenü:** In der Galerie **lange auf ein Bild drücken**. Dort kannst du das Bild
 herunterladen, teilen (z.B. per WhatsApp) oder löschen.
 
-Es gibt 55 Teile. Pro Slot trägt die Figur genau ein Teil: Ein neuer Hut ersetzt den alten.
+Es gibt 61 Teile. Pro Slot trägt die Figur genau ein Teil: Ein neuer Hut ersetzt den alten.
 Schleife und Hut, Flügel und Ballon oder Medaille und Kleid lassen sich aber kombinieren.
 
 ## Spielzeit-Timer (Elternbereich)
@@ -93,10 +93,11 @@ Alle Teile stehen in [js/items.js](js/items.js).
 werden wie Emojis über `anchor`, `size`, `ax`/`ay` platziert.
 
 **Selbst gezeichnete Kleider** (`svg`) sind SVG-Pfade im Koordinatensystem der Figur (400 × 520).
-Da alle Figuren denselben Körper haben, passen sie automatisch auf alle drei.
+Da alle Figuren denselben Körper haben, passen sie automatisch auf alle Figuren.
 
 **Neue Figur:** in [js/figures.js](js/figures.js) eine Kopf-Funktion und einen Eintrag in
-`FIGURES` (Farben und Andockpunkte für Kopf, Ohr und Augen) hinzufügen.
+`FIGURES` (Farben und Andockpunkte für Kopf, Ohr und Augen) hinzufügen. Optional zeichnet
+`back` etwas hinter den Körper (z.B. den Schwanz des Siebenschläfers).
 
 **Wichtig nach jeder Änderung:** In [sw.js](sw.js) `VERSION` hochzählen (z.B. `v4`),
 damit installierte Apps die neue Version laden.

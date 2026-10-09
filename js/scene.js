@@ -67,6 +67,7 @@ export function sceneSVG(figId, outfit, { bg = false, pop = null, live = false, 
     (bg ? BACKGROUND : '') +
     `<ellipse cx="205" cy="462" rx="80" ry="9" fill="rgba(0,0,0,.13)"/>` +
     `<g class="${live ? 'bob' : ''}">` +
+    (fig.back ? fig.back(c) : '') +
     it('back') +
     limbs(c) +
     bareFeet(c) +

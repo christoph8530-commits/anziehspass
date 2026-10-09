@@ -47,20 +47,8 @@ export const chime = () =>
 // Absteigende Melodie für den Sperrbildschirm
 export const lullaby = () =>
   [784, 659, 587, 523, 392].forEach((hz, i) => tone(hz, hz, 0.5, { type: 'triangle', vol: 0.12, delay: i * 0.4 }));
+// Fröhliches «Gespeichert»
+export const saved = () =>
+  [[659, 0], [784, 0.1], [1047, 0.2]].forEach(([hz, delay]) => tone(hz, hz, 0.18, { vol: 0.14, delay }));
 export const sweep = () => tone(900, 200, 0.35, { type: 'triangle', vol: 0.12 });
 
-export function shutter() {
-  const ac = audio();
-  if (!ac) return;
-  const len = Math.floor(ac.sampleRate * 0.12);
-  const buf = ac.createBuffer(1, len, ac.sampleRate);
-  const data = buf.getChannelData(0);
-  for (let i = 0; i < len; i++) data[i] = (Math.random() * 2 - 1) * (1 - i / len) ** 2;
-  const src = ac.createBufferSource();
-  const gain = ac.createGain();
-  gain.gain.value = 0.3;
-  src.buffer = buf;
-  src.connect(gain).connect(ac.destination);
-  src.start();
-  tone(1200, 1500, 0.08, { vol: 0.06, delay: 0.1 });
-}

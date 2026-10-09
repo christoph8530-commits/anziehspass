@@ -109,7 +109,7 @@ button {
   text-align: center;
 }
 
-.round.photo {
+.round.save {
   background: #fff3c4;
 }
 
@@ -164,7 +164,7 @@ button {
 }
 
 .fig-btn {
-  width: min(30vw, 240px, calc((100dvh - 200px) * 400 / 520));
+  width: min(18vw, 220px, calc((100dvh - 190px) * 400 / 520));
   aspect-ratio: 400 / 520;
   border-radius: 28px;
   overflow: hidden;
@@ -173,10 +173,10 @@ button {
   transition: transform 0.08s;
 }
 
-/* Hochformat: zwei Figuren oben, eine unten, dafür grösser */
+/* Hochformat: zwei Figuren pro Reihe, dafür grösser */
 @media (orientation: portrait) {
   .fig-btn {
-    width: min(42vw, 240px, calc((50dvh - 110px) * 400 / 520));
+    width: min(42vw, 240px, calc(((100dvh - 200px) / 3 - 18px) * 400 / 520));
   }
 }
 
@@ -514,26 +514,6 @@ button {
   }
 }
 
-#flash {
-  position: fixed;
-  inset: 0;
-  background: #fff;
-  opacity: 0;
-  pointer-events: none;
-}
-
-#flash.go {
-  animation: flash 0.45s ease-out;
-}
-
-@keyframes flash {
-  from {
-    opacity: 0.9;
-  }
-  to {
-    opacity: 0;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .bob,

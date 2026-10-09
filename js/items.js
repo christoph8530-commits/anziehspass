@@ -127,6 +127,27 @@ const FLOWERDRESS =
     .map(([x, y], i) => blossom(x, y, i % 2 ? '#F06292' : '#BA68C8'))
     .join('');
 
+const POLICEVEST =
+  shape(`${TOP} L284 355 C240 366 160 366 116 355 Z`, '#1E5BB8', '#0D3A80') +
+  [0, 14, 28]
+    .map((dy) => `<path d="M128 ${292 + dy} L144 ${304 + dy} L160 ${292 + dy}" fill="none" stroke="#FFD54F" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>`)
+    .join('') +
+  `<path d="M214 262 h24 v16 q0 12 -12 18 q-12 -6 -12 -18 Z" fill="#FFD54F" stroke="#F9A825" stroke-width="2"/>` +
+  star(226, 276, 6, '#1E5BB8', '#0D3A80');
+
+const REDJACKET =
+  shape(`M${f(edgeL(330))} 330 H${f(edgeR(330))} L294 386 C250 402 150 402 106 386 Z`, '#4A78B5', '#2C4F80') +
+  `<path d="M110 376 C150 391 250 391 290 376" fill="none" stroke="#8FB3E0" stroke-width="9" stroke-linecap="round"/>` +
+  `<path d="M200 344 V392" stroke="#2C4F80" stroke-width="3"/>` +
+  shape(`${TOP} L${f(edgeR(340))} 340 C230 350 170 350 ${f(edgeL(340))} 340 Z`, '#E53935', '#B71C1C') +
+  `<path d="M170 246 L194 268 L200 254 L206 268 L230 246" fill="#C62828" stroke="#B71C1C" stroke-width="3" stroke-linejoin="round"/>` +
+  [286, 310, 334].map((y, i) => `<circle cx="${214 + i * 6}" cy="${y}" r="5" fill="#FFD54F" stroke="#F9A825" stroke-width="1.5"/>`).join('');
+
+const PYJAMA =
+  shape(COAT, '#42A5F5', '#1565C0') +
+  [[262, 274], [286, 298], [310, 322], [334, 346], [358, 370]].map(([a, b]) => band(a, b, '#EF5350')).join('') +
+  `<path d="M168 246 L200 264 L232 246" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>`;
+
 // --- Hals und Rücken -------------------------------------------------------------
 
 const SCARF =
@@ -210,6 +231,32 @@ const PIRATEHAT =
   `<circle cx="60" cy="57" r="2.2" fill="#263238"/><circle cx="68" cy="57" r="2.2" fill="#263238"/>` +
   `<path d="M52 68 L76 76 M76 68 L52 76" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`;
 
+const NIGHTCAP =
+  `<path d="M22 100 C26 52 52 18 92 22 C112 24 122 40 118 60 C108 46 96 44 88 52 C100 70 106 86 106 100 Z" fill="#5C6BC0" stroke="#283593" stroke-width="4" stroke-linejoin="round"/>` +
+  star(60, 62, 7, '#FFEB3B') +
+  star(84, 82, 5, '#FFEB3B') +
+  star(44, 86, 5, '#FFEB3B') +
+  `<path d="M16 96 H112 Q118 104 112 112 H16 Q10 104 16 96 Z" fill="#fff" stroke="#C5CAE9" stroke-width="3"/>` +
+  `<circle cx="118" cy="62" r="11" fill="#fff" stroke="#C5CAE9" stroke-width="3"/>`;
+
+const WREATH =
+  `<ellipse cx="64" cy="78" rx="56" ry="18" fill="none" stroke="#7CB342" stroke-width="7"/>` +
+  [0, 1, 2, 3, 4, 5, 6]
+    .map((i) => {
+      const a = Math.PI * (0.1 + (0.8 * i) / 6);
+      return blossom(64 - 56 * Math.cos(a), 78 + 18 * Math.sin(a) - 6, ['#F06292', '#FFF176', '#BA68C8', '#4FC3F7'][i % 4], 7);
+    })
+    .join('');
+
+const PLUSHBUNNY =
+  `<path d="M44 40 C36 6 52 2 56 36 Z M72 36 C76 2 92 6 84 40 Z" fill="#ECEFF1" stroke="#90A4AE" stroke-width="3" stroke-linejoin="round"/>` +
+  `<path d="M48 34 C44 14 50 12 53 34 Z M75 34 C78 12 84 14 80 34 Z" fill="#F8BBD0"/>` +
+  `<ellipse cx="64" cy="94" rx="30" ry="28" fill="#ECEFF1" stroke="#90A4AE" stroke-width="3"/>` +
+  `<circle cx="64" cy="54" r="24" fill="#ECEFF1" stroke="#90A4AE" stroke-width="3"/>` +
+  `<circle cx="55" cy="52" r="3.5" fill="#37474F"/><circle cx="73" cy="52" r="3.5" fill="#37474F"/>` +
+  `<ellipse cx="64" cy="61" rx="4" ry="3" fill="#F48FB1"/>` +
+  `<path d="M54 94 h20 M64 84 v20" stroke="#CFD8DC" stroke-width="3" stroke-linecap="round" stroke-dasharray="3 4"/>`;
+
 const HEARTGLASSES =
   heart(34, 64, 22, '#F48FB1', '#C2185B') +
   heart(94, 64, 22, '#F48FB1', '#C2185B') +
@@ -248,6 +295,8 @@ export const ITEMS = [
   { id: 'partyhat', cat: 'head', slot: 'head', art: PARTYHAT, anchor: 'head', size: 0.9, ay: 0.86 },
   { id: 'wizardhat', cat: 'head', slot: 'head', art: WIZARDHAT, anchor: 'head', size: 1.35, ay: 0.78 },
   { id: 'piratehat', cat: 'head', slot: 'head', art: PIRATEHAT, anchor: 'head', size: 1.4, ay: 0.74 },
+  { id: 'nightcap', cat: 'head', slot: 'head', art: NIGHTCAP, anchor: 'head', size: 1.15, ay: 0.82 },
+  { id: 'wreath', cat: 'head', slot: 'head', art: WREATH, anchor: 'head', size: 1.15, ay: 0.62 },
   { id: 'gradcap', cat: 'head', slot: 'head', emoji: '1f393', anchor: 'head', size: 1.1, ay: 0.72 },
   { id: 'bow', cat: 'head', slot: 'bow', emoji: '1f380', anchor: 'ear', size: 1, ay: 0.5 },
   { id: 'sunflower', cat: 'head', slot: 'bow', emoji: '1f33b', anchor: 'ear', size: 0.9, ay: 0.5 },
@@ -268,6 +317,9 @@ export const ITEMS = [
   { id: 'overalls', cat: 'body', slot: 'body', svg: OVERALLS, thumb: BODY_THUMB },
   { id: 'raincoat', cat: 'body', slot: 'body', svg: RAINCOAT, thumb: BODY_THUMB },
   { id: 'vest', cat: 'body', slot: 'body', svg: VEST, thumb: BODY_THUMB },
+  { id: 'policevest', cat: 'body', slot: 'body', svg: POLICEVEST, thumb: BODY_THUMB },
+  { id: 'redjacket', cat: 'body', slot: 'body', svg: REDJACKET, thumb: BODY_THUMB },
+  { id: 'pyjama', cat: 'body', slot: 'body', svg: PYJAMA, thumb: BODY_THUMB },
   { id: 'firejacket', cat: 'body', slot: 'body', svg: FIREJACKET, thumb: BODY_THUMB },
   // Hals und Rücken
   { id: 'scarf', cat: 'acc', slot: 'neck', svg: SCARF, thumb: '140 230 125 92' },
@@ -285,6 +337,7 @@ export const ITEMS = [
   { id: 'skates', cat: 'feet', slot: 'feet', emoji: '1f6fc', anchor: ['footL', 'footR'], size: 1.25, ay: 0.78 },
   { id: 'flippers', cat: 'feet', slot: 'feet', svg: FLIPPERS, thumb: '150 408 150 70' },
   // Spielsachen
+  { id: 'plushbunny', cat: 'toys', slot: 'hand', art: PLUSHBUNNY, anchor: 'hand', size: 1, ay: 0.6 },
   { id: 'teddy', cat: 'toys', slot: 'hand', emoji: '1f9f8', anchor: 'hand', size: 0.85, ay: 0.55 },
   { id: 'balloon', cat: 'toys', slot: 'hand', emoji: '1f388', anchor: 'hand', size: 0.85, ay: 0.97, lift: 130 },
   { id: 'kite', cat: 'toys', slot: 'hand', emoji: '1fa81', anchor: 'hand', size: 1, ay: 0.9, lift: 170 },

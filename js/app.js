@@ -190,10 +190,9 @@ $('#btn-reset').addEventListener('click', () => {
   renderTray();
 });
 
-$('#btn-photo').addEventListener('click', () => {
-  sound.shutter();
-  replay($('#flash'), 'go');
-  replay($('#btn-photo'), 'bounce');
+$('#btn-save').addEventListener('click', () => {
+  sound.saved();
+  replay($('#btn-save'), 'bounce');
   // Gleichen Look nicht doppelt speichern
   const last = state.gallery[0];
   if (last && last.fig === state.fig && JSON.stringify(last.outfit) === JSON.stringify(outfit())) {
@@ -206,7 +205,7 @@ $('#btn-photo').addEventListener('click', () => {
   flyToGallery();
 });
 
-// Das Foto fliegt sichtbar in den Galerie-Knopf.
+// Der gespeicherte Look fliegt sichtbar in den Galerie-Knopf.
 function flyToGallery() {
   const target = $('#btn-dress-gallery');
   const from = $('#stage').getBoundingClientRect();
