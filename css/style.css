@@ -542,3 +542,312 @@ button {
     animation: none;
   }
 }
+
+/* --- Spielzeit: Elternknopf, Balken, Erinnerung, Sperre, PIN --------------------- */
+
+.round.small {
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 4px 0 var(--shadow);
+}
+
+.round.small img {
+  width: 30px;
+  height: 30px;
+}
+
+.round.corner {
+  position: absolute;
+  top: calc(env(safe-area-inset-top) + 12px);
+  right: calc(env(safe-area-inset-right) + 16px);
+  opacity: 0.85;
+}
+
+#timer-bar {
+  position: fixed;
+  top: env(safe-area-inset-top);
+  left: 0;
+  right: 0;
+  height: 7px;
+  background: #ffffff99;
+  z-index: 40;
+}
+
+#timer-bar[hidden] {
+  display: none;
+}
+
+#timer-bar > div {
+  height: 100%;
+  border-radius: 0 4px 4px 0;
+  transition: width 1s linear, background 1s;
+}
+
+.layer {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.layer[hidden] {
+  display: none;
+}
+
+#reminder {
+  z-index: 900;
+  background: rgba(30, 40, 80, 0.45);
+}
+
+.reminder-card {
+  position: relative;
+  width: min(78vw, 340px);
+  aspect-ratio: 1;
+  border-radius: 40px;
+  background: #fff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: grid;
+  place-items: center;
+  animation: pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.reminder-card > img {
+  position: absolute;
+  top: -34px;
+  right: -20px;
+  width: 92px;
+  animation: wiggle 1s ease-in-out infinite;
+}
+
+#reminder-pie {
+  width: 82%;
+  aspect-ratio: 1;
+}
+
+#reminder-pie svg {
+  width: 100%;
+  height: 100%;
+}
+
+#lock {
+  z-index: 1000;
+  overflow: hidden;
+  background: linear-gradient(#141b4d, #3949ab);
+  align-content: center;
+  justify-items: center;
+  gap: 8px;
+  color: #fff;
+}
+
+#lock .stars {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(2px 2px at 20% 15%, #fff 50%, transparent 51%),
+    radial-gradient(2px 2px at 70% 10%, #fff 50%, transparent 51%),
+    radial-gradient(3px 3px at 85% 30%, #fff 50%, transparent 51%),
+    radial-gradient(2px 2px at 40% 35%, #fff 50%, transparent 51%),
+    radial-gradient(2px 2px at 10% 55%, #fff 50%, transparent 51%),
+    radial-gradient(3px 3px at 60% 60%, #fff 50%, transparent 51%),
+    radial-gradient(2px 2px at 90% 75%, #fff 50%, transparent 51%),
+    radial-gradient(2px 2px at 30% 85%, #fff 50%, transparent 51%),
+    radial-gradient(3px 3px at 15% 30%, #fff 50%, transparent 51%),
+    radial-gradient(2px 2px at 50% 90%, #fff 50%, transparent 51%);
+  animation: twinkle 3s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  to {
+    opacity: 0.5;
+  }
+}
+
+#lock .moon {
+  position: relative;
+  width: min(45vw, 200px);
+  animation: bob 4s ease-in-out infinite;
+}
+
+#lock .zzz {
+  position: relative;
+  font-size: 40px;
+  font-weight: 800;
+  letter-spacing: 6px;
+}
+
+#lock .zzz span {
+  display: inline-block;
+  animation: zzz 2.4s ease-in-out infinite;
+}
+
+#lock .zzz span:nth-child(2) {
+  animation-delay: 0.4s;
+  font-size: 0.8em;
+}
+
+#lock .zzz span:nth-child(3) {
+  animation-delay: 0.8s;
+  font-size: 0.6em;
+}
+
+@keyframes zzz {
+  50% {
+    transform: translateY(-12px);
+    opacity: 0.4;
+  }
+}
+
+.lock-text {
+  position: relative;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  opacity: 0.85;
+}
+
+#btn-unlock {
+  position: absolute;
+  right: calc(env(safe-area-inset-right) + 16px);
+  bottom: calc(env(safe-area-inset-bottom) + 16px);
+  opacity: 0.5;
+}
+
+#parent {
+  z-index: 1050;
+  background: rgba(30, 40, 60, 0.5);
+}
+
+#pin {
+  z-index: 1100;
+  background: rgba(30, 40, 60, 0.6);
+}
+
+.panel {
+  width: min(380px, 100%);
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 28px;
+  padding: 20px;
+  display: grid;
+  gap: 10px;
+  color: var(--ink);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.panel h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.panel p {
+  margin: 0;
+}
+
+#timer-status {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.panel-hint {
+  font-size: 14px;
+  opacity: 0.7;
+}
+
+.panel-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.panel-row[hidden] {
+  display: none;
+}
+
+#duration-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+#duration-grid .text-btn {
+  font-size: 16px;
+  padding: 0 4px;
+}
+
+.pin-panel {
+  width: min(320px, 100%);
+  justify-items: center;
+}
+
+#pin-title {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+}
+
+#pin-dots {
+  display: flex;
+  gap: 16px;
+  margin: 6px 0 10px;
+}
+
+#pin-dots i {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid #5c6bc0;
+}
+
+#pin-dots i.on {
+  background: #5c6bc0;
+}
+
+#pin-dots.shake {
+  animation: shake 0.4s;
+}
+
+@keyframes shake {
+  20%,
+  60% {
+    transform: translateX(-10px);
+  }
+  40%,
+  80% {
+    transform: translateX(10px);
+  }
+}
+
+#pin-blocked {
+  color: #b3261e;
+  font-weight: 700;
+  text-align: center;
+}
+
+#pin-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 72px);
+  gap: 12px;
+}
+
+#pin-pad button {
+  height: 64px;
+  border-radius: 20px;
+  background: #e8f4ff;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+#pin-pad button:active {
+  transform: scale(0.95);
+}
+
+#pin-pad .pin-fn {
+  background: none;
+  font-size: 24px;
+}
+
+#pin-pad.blocked {
+  opacity: 0.35;
+  pointer-events: none;
+}

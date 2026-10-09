@@ -13,6 +13,7 @@
 <body>
   <!-- Start: Figur wählen -->
   <section id="screen-start" class="screen">
+    <button id="btn-parent" class="round small corner" aria-label="Elternbereich"><img src="assets/emoji/emoji_u23f1.svg" alt="" draggable="false"></button>
     <div id="figure-choice"></div>
     <button id="btn-gallery" class="round big" aria-label="Galerie">
       <img src="assets/emoji/emoji_u1f5bc.svg" alt="" draggable="false">
@@ -69,6 +70,59 @@
   </dialog>
 
   <div id="flash"></div>
+
+  <!-- Spielzeit: Balken oben -->
+  <div id="timer-bar" hidden><div></div></div>
+
+  <!-- Erinnerung (z.B. noch 5 Minuten) -->
+  <div id="reminder" class="layer" hidden>
+    <div class="reminder-card">
+      <img src="assets/emoji/emoji_u23f3.svg" alt="" draggable="false">
+      <div id="reminder-pie"></div>
+    </div>
+  </div>
+
+  <!-- Sperrbildschirm, wenn die Spielzeit um ist -->
+  <div id="lock" class="layer" hidden>
+    <div class="stars"></div>
+    <img class="moon" src="assets/emoji/emoji_u1f319.svg" alt="" draggable="false">
+    <div class="zzz"><span>z</span><span>z</span><span>z</span></div>
+    <p class="lock-text">Schluss für heute</p>
+    <button id="btn-unlock" class="round small" aria-label="Entsperren"><img src="assets/emoji/emoji_u1f512.svg" alt="" draggable="false"></button>
+  </div>
+
+  <!-- Elternbereich -->
+  <div id="parent" class="layer" hidden>
+    <div class="panel">
+      <h2>Spielzeit</h2>
+      <p id="timer-status"></p>
+      <div id="timer-running" class="panel-row" hidden>
+        <button id="btn-add10" class="text-btn">+10 Min.</button>
+        <button id="btn-stop-timer" class="text-btn">Timer stoppen</button>
+      </div>
+      <p class="panel-hint">Neuen Timer starten:</p>
+      <div id="duration-grid"></div>
+      <p class="panel-hint">Erinnerung bei 15, 10 und 5 Minuten, danach wird die App gesperrt.</p>
+      <button id="btn-lock-now" class="text-btn danger">Jetzt sperren</button>
+      <button id="btn-change-pin" class="text-btn">PIN ändern</button>
+      <button id="btn-parent-close" class="text-btn plain">Schliessen</button>
+    </div>
+  </div>
+
+  <!-- PIN-Eingabe -->
+  <div id="pin" class="layer" hidden>
+    <div class="panel pin-panel">
+      <p id="pin-title"></p>
+      <div id="pin-dots"></div>
+      <p id="pin-blocked" hidden>Zu viele Versuche. Bitte <span id="pin-blocked-sec"></span> s warten.</p>
+      <div id="pin-pad">
+        <button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button>
+        <button data-key="4">4</button><button data-key="5">5</button><button data-key="6">6</button>
+        <button data-key="7">7</button><button data-key="8">8</button><button data-key="9">9</button>
+        <button data-key="cancel" class="pin-fn" aria-label="Abbrechen">✕</button><button data-key="0">0</button><button data-key="back" class="pin-fn" aria-label="Löschen">⌫</button>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="js/app.js"></script>
 </body>

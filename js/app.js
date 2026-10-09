@@ -3,6 +3,7 @@ import { CATEGORIES, ITEMS, ITEMS_BY_ID, SLOTS } from './items.js';
 import { sceneSVG, thumbHTML, scenePNG, backdropSVG } from './scene.js';
 import * as sound from './sound.js';
 import * as store from './storage.js';
+import { initTimer } from './timer.js';
 
 const $ = (sel) => document.querySelector(sel);
 const MAX_LOOKS = 100;
@@ -466,6 +467,15 @@ $('#btn-cancel').addEventListener('click', () => dialog.close());
 
 renderStart();
 show('start');
+initTimer({
+  // Läuft gerade die Modenschau, wird sie beim Sperren beendet.
+  onLock: () => {
+    if (screens.show.hidden) return;
+    stopShow();
+    renderGallery();
+    show('gallery');
+  },
+});
 
 if ('serviceWorker' in navigator) {
   // Kommt eine neue Version an, einmal neu laden, damit nicht alte und neue Dateien gemischt werden.

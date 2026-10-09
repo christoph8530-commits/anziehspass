@@ -39,6 +39,14 @@ export const fanfare = () =>
   [[523, 0, 0.12], [659, 0.13, 0.12], [784, 0.26, 0.12], [1047, 0.39, 0.45]].forEach(([hz, delay, len]) =>
     tone(hz, hz * 1.01, len, { type: 'triangle', vol: 0.16, delay })
   );
+// Sanfte Glocke für die Erinnerungen
+export const chime = () =>
+  [[880, 0], [660, 0.35], [880, 0.9], [660, 1.25]].forEach(([hz, delay]) =>
+    tone(hz, hz, 0.6, { vol: 0.14, delay })
+  );
+// Absteigende Melodie für den Sperrbildschirm
+export const lullaby = () =>
+  [784, 659, 587, 523, 392].forEach((hz, i) => tone(hz, hz, 0.5, { type: 'triangle', vol: 0.12, delay: i * 0.4 }));
 export const sweep = () => tone(900, 200, 0.35, { type: 'triangle', vol: 0.12 });
 
 export function shutter() {
