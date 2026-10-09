@@ -16,7 +16,7 @@
     <div id="figure-choice"></div>
     <button id="btn-gallery" class="round big" aria-label="Galerie">
       <img src="assets/emoji/emoji_u1f5bc.svg" alt="" draggable="false">
-      <span id="gallery-count" class="badge" hidden>0</span>
+      <span class="badge gallery-count" hidden>0</span>
     </button>
   </section>
 
@@ -28,6 +28,10 @@
       <button id="btn-random" class="round" aria-label="Zufall"><img src="assets/emoji/emoji_u1f3b2.svg" alt="" draggable="false"></button>
       <button id="btn-reset" class="round" aria-label="Alles ausziehen"><img src="assets/emoji/emoji_u1f9f9.svg" alt="" draggable="false"></button>
       <button id="btn-photo" class="round photo" aria-label="Foto"><img src="assets/emoji/emoji_u1f4f7.svg" alt="" draggable="false"></button>
+      <button id="btn-dress-gallery" class="round" aria-label="Galerie">
+        <img src="assets/emoji/emoji_u1f5bc.svg" alt="" draggable="false">
+        <span class="badge gallery-count" hidden>0</span>
+      </button>
     </header>
     <div id="stage"></div>
     <nav id="tabs"></nav>
@@ -38,9 +42,19 @@
   <section id="screen-gallery" class="screen" hidden>
     <header class="toolbar">
       <button id="btn-gallery-home" class="round" aria-label="Zurück"><img src="assets/emoji/emoji_u1f3e0.svg" alt="" draggable="false"></button>
+      <span class="spacer"></span>
+      <button id="btn-show" class="round play" aria-label="Modenschau"><img src="assets/emoji/emoji_u25b6.svg" alt="" draggable="false"></button>
     </header>
     <div id="gallery-grid"></div>
     <div id="gallery-empty" hidden><img src="assets/emoji/emoji_u1f4f7.svg" alt="" draggable="false"></div>
+  </section>
+
+  <!-- Modenschau: alle gespeicherten Looks nacheinander auf dem Laufsteg -->
+  <section id="screen-show" class="screen" hidden>
+    <div id="runway"></div>
+    <header class="toolbar overlay">
+      <button id="btn-show-home" class="round" aria-label="Zurück"><img src="assets/emoji/emoji_u1f3e0.svg" alt="" draggable="false"></button>
+    </header>
   </section>
 
   <!-- Elternmenü (lange auf ein Bild in der Galerie drücken) -->

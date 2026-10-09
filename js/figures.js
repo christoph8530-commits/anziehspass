@@ -88,6 +88,7 @@ function rabbitHead(c) {
 // Andockpunkte, die für alle Figuren gleich sind (gemeinsamer Körper).
 const SHARED_ANCHORS = {
   hand: { x: 299, y: 329, w: 100 },
+  neck: { x: 200, y: 254, w: 60 },
   back: { x: 122, y: 302, w: 92, rot: -8 },
   footL: { x: 184, y: 452, w: 42 },
   footR: { x: 228, y: 452, w: 42 },

@@ -35,6 +35,10 @@ export const dice = () =>
   [0, 0.07, 0.14, 0.21, 0.28].forEach((d, i) =>
     tone(450 + i * 110, 520 + i * 110, 0.06, { type: 'square', vol: 0.05, delay: d })
   );
+export const fanfare = () =>
+  [[523, 0, 0.12], [659, 0.13, 0.12], [784, 0.26, 0.12], [1047, 0.39, 0.45]].forEach(([hz, delay, len]) =>
+    tone(hz, hz * 1.01, len, { type: 'triangle', vol: 0.16, delay })
+  );
 export const sweep = () => tone(900, 200, 0.35, { type: 'triangle', vol: 0.12 });
 
 export function shutter() {

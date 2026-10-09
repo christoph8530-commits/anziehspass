@@ -1,11 +1,11 @@
 import { FIGURES } from './figures.js';
 import { CATEGORIES, ITEMS, ITEMS_BY_ID, SLOTS } from './items.js';
-import { sceneSVG, thumbHTML, scenePNG } from './scene.js';
+import { sceneSVG, thumbHTML, scenePNG, backdropSVG } from './scene.js';
 import * as sound from './sound.js';
 import * as store from './storage.js';
 
 const $ = (sel) => document.querySelector(sel);
-const MAX_LOOKS = 60;
+const MAX_LOOKS = 100;
 const LONG_PRESS_MS = 700;
 
 const state = {
@@ -14,12 +14,14 @@ const state = {
   outfits: store.load('outfits', {}),
   gallery: store.load('gallery', []),
   openLook: null,
+  galleryBack: 'start',
 };
 
 const screens = {
   start: $('#screen-start'),
   dress: $('#screen-dress'),
   gallery: $('#screen-gallery'),
+  show: $('#screen-show'),
 };
 
 function show(name) {
@@ -36,6 +38,10 @@ function replay(el, cls) {
   el.classList.add(cls);
 }
 
+// Wartet auf das Ende einer Animation, spätestens nach der geplanten Dauer
+// (falls der Browser im Hintergrund keine Frames zeichnet).
+const played = (anim, ms) => Promise.race([anim.finished, new Promise((r) => setTimeout(r, ms + 150))]);
+
 // --- Startbildschirm -------------------------------------------------------
 
 function renderStart() {
@@ -47,9 +53,20 @@ function renderStart() {
         `</button>`
     )
     .join('');
-  const badge = $('#gallery-count');
-  badge.textContent = state.gallery.length;
-  badge.hidden = state.gallery.length === 0;
+  updateBadges();
+}
+
+function updateBadges() {
+  for (const badge of document.querySelectorAll('.gallery-count')) {
+    badge.textContent = state.gallery.length;
+    badge.hidden = state.gallery.length === 0;
+  }
+}
+
+function openGallery(from) {
+  state.galleryBack = from;
+  renderGallery();
+  show('gallery');
 }
 
 $('#figure-choice').addEventListener('click', (e) => {
@@ -61,8 +78,7 @@ $('#figure-choice').addEventListener('click', (e) => {
 
 $('#btn-gallery').addEventListener('click', () => {
   sound.tap();
-  renderGallery();
-  show('gallery');
+  openGallery('start');
 });
 
 // --- Anziehraum ------------------------------------------------------------
@@ -72,6 +88,7 @@ function openDress(fig) {
   renderTabs();
   renderTray();
   renderStage();
+  updateBadges();
   show('dress');
 }
 
@@ -173,12 +190,60 @@ $('#btn-reset').addEventListener('click', () => {
 });
 
 $('#btn-photo').addEventListener('click', () => {
-  state.gallery.unshift({ id: Date.now(), fig: state.fig, outfit: { ...outfit() } });
-  state.gallery.length = Math.min(state.gallery.length, MAX_LOOKS);
-  saveGallery();
   sound.shutter();
   replay($('#flash'), 'go');
   replay($('#btn-photo'), 'bounce');
+  // Gleichen Look nicht doppelt speichern
+  const last = state.gallery[0];
+  if (last && last.fig === state.fig && JSON.stringify(last.outfit) === JSON.stringify(outfit())) {
+    replay($('#btn-dress-gallery'), 'bounce');
+    return;
+  }
+  state.gallery.unshift({ id: Date.now(), fig: state.fig, outfit: { ...outfit() } });
+  state.gallery.length = Math.min(state.gallery.length, MAX_LOOKS);
+  saveGallery();
+  flyToGallery();
+});
+
+// Das Foto fliegt sichtbar in den Galerie-Knopf.
+function flyToGallery() {
+  const target = $('#btn-dress-gallery');
+  const from = $('#stage').getBoundingClientRect();
+  const to = target.getBoundingClientRect();
+  const w = Math.min(from.width * 0.6, (from.height * 0.7 * 400) / 520);
+  const h = (w * 520) / 400;
+  const card = document.createElement('div');
+  card.className = 'fly-card';
+  card.innerHTML = sceneSVG(state.fig, outfit(), { bg: true });
+  Object.assign(card.style, {
+    width: `${w}px`,
+    height: `${h}px`,
+    left: `${from.left + from.width / 2 - w / 2}px`,
+    top: `${from.top + from.height / 2 - h / 2}px`,
+  });
+  document.body.append(card);
+  const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+  const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+  const anim = card.animate(
+    [
+      { transform: 'scale(0.6) rotate(0deg)', opacity: 0 },
+      { transform: 'scale(1) rotate(-4deg)', opacity: 1, offset: 0.25 },
+      { transform: 'scale(1) rotate(-4deg)', opacity: 1, offset: 0.45 },
+      { transform: `translate(${dx}px, ${dy}px) scale(0.1) rotate(10deg)`, opacity: 0.6 },
+    ],
+    { duration: 1100, easing: 'cubic-bezier(.45,0,.55,1)' }
+  );
+  played(anim, 1100).then(() => {
+    card.remove();
+    updateBadges();
+    replay(target, 'bounce');
+    sound.wear();
+  });
+}
+
+$('#btn-dress-gallery').addEventListener('click', () => {
+  sound.tap();
+  openGallery('dress');
 });
 
 // --- Galerie ---------------------------------------------------------------
@@ -189,14 +254,19 @@ function renderGallery() {
     .map((look) => `<button class="look" data-id="${look.id}">${sceneSVG(look.fig, look.outfit, { bg: true })}</button>`)
     .join('');
   $('#gallery-empty').hidden = state.gallery.length > 0;
+  $('#btn-show').hidden = state.gallery.length === 0;
 }
 
 const findLook = (id) => state.gallery.find((l) => String(l.id) === String(id));
 
 $('#btn-gallery-home').addEventListener('click', () => {
   sound.tap();
-  renderStart();
-  show('start');
+  if (state.galleryBack === 'dress' && state.fig) {
+    openDress(state.fig);
+  } else {
+    renderStart();
+    show('start');
+  }
 });
 
 // Kurz tippen = Look in den Anziehraum laden.
@@ -228,6 +298,114 @@ $('#gallery-grid').addEventListener('click', (e) => {
   saveOutfits();
   sound.wear();
   openDress(look.fig);
+});
+
+// --- Modenschau --------------------------------------------------------------
+// Alle gespeicherten Looks laufen nacheinander über den Laufsteg.
+// Antippen = nächster Look, 🏠 = zurück zur Galerie.
+
+let showToken = 0;
+let skipWait = null;
+const runway = $('#runway');
+
+const WALK_IN = [
+  { transform: 'translateX(110%)' },
+  { transform: 'translateX(82%) translateY(-14px)' },
+  { transform: 'translateX(55%)' },
+  { transform: 'translateX(27%) translateY(-14px)' },
+  { transform: 'translateX(0)' },
+];
+const WALK_OUT = [
+  { transform: 'translateX(0)' },
+  { transform: 'translateX(-27%) translateY(-14px)' },
+  { transform: 'translateX(-55%)' },
+  { transform: 'translateX(-82%) translateY(-14px)' },
+  { transform: 'translateX(-110%)' },
+];
+
+function waitOrTap(ms) {
+  return new Promise((resolve) => {
+    const timer = setTimeout(done, ms);
+    function done() {
+      clearTimeout(timer);
+      skipWait = null;
+      resolve();
+    }
+    skipWait = done;
+  });
+}
+
+function confetti() {
+  const colors = ['#FF6FA8', '#FFD54F', '#4FC3F7', '#81C784', '#BA68C8', '#FF8A65'];
+  const height = runway.clientHeight;
+  for (let i = 0; i < 44; i++) {
+    const piece = document.createElement('i');
+    piece.className = 'confetti';
+    piece.style.background = colors[i % colors.length];
+    piece.style.left = `${Math.random() * 100}%`;
+    runway.append(piece);
+    const drift = (Math.random() - 0.5) * 160;
+    const duration = 1800 + Math.random() * 1400;
+    const delay = Math.random() * 400;
+    const anim = piece.animate(
+      [
+        { transform: 'translate(0, -30px) rotate(0deg)' },
+        { transform: `translate(${drift}px, ${height + 40}px) rotate(${Math.random() * 900}deg)` },
+      ],
+      { duration, delay, easing: 'cubic-bezier(.2,.5,.4,1)', fill: 'both' }
+    );
+    played(anim, duration + delay).then(() => piece.remove());
+  }
+}
+
+async function presentLook(look, token) {
+  const el = document.createElement('div');
+  el.className = 'runway-look';
+  el.innerHTML = sceneSVG(look.fig, look.outfit, { live: true });
+  runway.append(el);
+  await played(el.animate(WALK_IN, { duration: 1500, easing: 'ease-out', fill: 'both' }), 1500);
+  if (token !== showToken) return;
+  sound.fanfare();
+  confetti();
+  el.firstElementChild.animate(
+    [{ transform: 'scale(1)' }, { transform: 'scale(1.08) translateY(-10px)' }, { transform: 'scale(1)' }],
+    { duration: 600, easing: 'ease-out' }
+  );
+  await waitOrTap(3200);
+  if (token !== showToken) return;
+  await played(el.animate(WALK_OUT, { duration: 1100, easing: 'ease-in', fill: 'both' }), 1100);
+  el.remove();
+}
+
+async function startShow() {
+  if (state.gallery.length === 0) return;
+  const token = ++showToken;
+  runway.innerHTML = `<div class="runway-backdrop">${backdropSVG()}</div>`;
+  show('show');
+  const looks = [...state.gallery].reverse(); // älteste zuerst
+  for (let i = 0; token === showToken; i++) {
+    await presentLook(looks[i % looks.length], token);
+  }
+}
+
+function stopShow() {
+  showToken++;
+  skipWait?.();
+  runway.innerHTML = '';
+}
+
+$('#btn-show').addEventListener('click', () => {
+  sound.tap();
+  startShow();
+});
+
+runway.addEventListener('click', () => skipWait?.());
+
+$('#btn-show-home').addEventListener('click', () => {
+  sound.tap();
+  stopShow();
+  renderGallery();
+  show('gallery');
 });
 
 // --- Elternmenü ------------------------------------------------------------
@@ -278,6 +456,7 @@ $('#btn-delete').addEventListener('click', () => {
   state.gallery = state.gallery.filter((l) => l !== state.openLook);
   saveGallery();
   renderGallery();
+  updateBadges();
   dialog.close();
 });
 
@@ -289,5 +468,13 @@ renderStart();
 show('start');
 
 if ('serviceWorker' in navigator) {
+  // Kommt eine neue Version an, einmal neu laden, damit nicht alte und neue Dateien gemischt werden.
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadController || reloading) return;
+    reloading = true;
+    location.reload();
+  });
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }

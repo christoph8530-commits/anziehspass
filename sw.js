@@ -1,12 +1,14 @@
 // Service Worker: macht die App offline-fähig.
 // Bei Änderungen an der App VERSION hochzählen, damit Handys die neue Version laden.
 
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE = `anziehspass-${VERSION}`;
 
 const EMOJI = [
-  '1f338', '1f380', '1f388', '1f392', '1f3a9', '1f3b2', '1f3e0', '1f451', '1f452', '1f453', '1f457',
-  '1f45f', '1f4f7', '1f576', '1f5bc', '1f97d', '1f9e2', '1f9f9', '1fa84', '2602', '26d1',
+  '1f338', '1f33b', '1f366', '1f36d', '1f380', '1f388', '1f392', '1f393', '1f3a9',
+  '1f3b2', '1f3e0', '1f451', '1f452', '1f453', '1f457', '1f45f', '1f4f7', '1f576', '1f5bc',
+  '1f6fc', '1f947', '1f955', '1f97d', '1f97e', '1f9b4', '1f9e2', '1f9e3', '1f9f8', '1f9f9',
+  '1fa81', '1fa84', '1faa3', '1fabd', '25b6', '2602', '26bd', '26d1',
 ];
 
 const FILES = [
@@ -27,7 +29,10 @@ const FILES = [
 ];
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(FILES)));
+  // cache: 'reload' umgeht den HTTP-Cache, damit wirklich die neue Version geladen wird.
+  event.waitUntil(
+    caches.open(CACHE).then((cache) => cache.addAll(FILES.map((f) => new Request(f, { cache: 'reload' }))))
+  );
   self.skipWaiting();
 });
 

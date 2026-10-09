@@ -10,7 +10,8 @@ const BACKGROUND =
   // Hügel: reicht über den Bildrand hinaus, damit er im Querformat nicht abbricht.
   `<path d="M-600 480 Q200 400 1000 480 V2000 H-600 Z" fill="#8BC34A" stroke="#7CB342" stroke-width="6"/>`;
 
-function emojiItem(item, figId, anchor, images) {
+// Platziert ein Emoji- oder art-Teil an einem Andockpunkt der Figur.
+function anchoredItem(item, figId, anchor, images) {
   const a = { ...anchor, ...item.per?.[figId] };
   const w = (a.w ?? 100) * (item.size ?? 1);
   const ax = item.ax ?? 0.5;
@@ -18,15 +19,19 @@ function emojiItem(item, figId, anchor, images) {
   const rot = (a.rot ?? 0) + (item.rot ?? 0);
   const x = a.x + (a.dx ?? 0);
   const y = a.y + (a.dy ?? 0) - (item.lift ?? 0);
-  const src = emojiSrc(item.emoji);
-  const href = images?.[src] ?? src;
   let s = '';
   if (item.lift) {
     s += `<path d="M${a.x} ${a.y} Q${a.x + 12} ${a.y - item.lift / 2} ${x} ${y}" fill="none" stroke="#666" stroke-width="2"/>`;
   }
-  s +=
-    `<g transform="translate(${x} ${y}) rotate(${rot})${item.flip ? ' scale(-1 1)' : ''}">` +
-    `<image href="${href}" x="${-w * ax}" y="${-w * ay}" width="${w}" height="${w}"/></g>`;
+  const box = `x="${-w * ax}" y="${-w * ay}" width="${w}" height="${w}"`;
+  let content;
+  if (item.art) {
+    content = `<svg ${box} viewBox="0 0 128 128" overflow="visible">${item.art}</svg>`;
+  } else {
+    const src = emojiSrc(item.emoji);
+    content = `<image href="${images?.[src] ?? src}" ${box}/>`;
+  }
+  s += `<g transform="translate(${x} ${y}) rotate(${rot})${item.flip ? ' scale(-1 1)' : ''}">${content}</g>`;
   return s;
 }
 
@@ -37,7 +42,7 @@ function itemSVG(item, figId, slot, pop, images) {
     inner = item.svg;
   } else {
     const anchors = Array.isArray(item.anchor) ? item.anchor : [item.anchor];
-    inner = anchors.map((name) => emojiItem(item, figId, fig.anchors[name], images)).join('');
+    inner = anchors.map((name) => anchoredItem(item, figId, fig.anchors[name], images)).join('');
   }
   return `<g class="item" data-slot="${slot}"><g class="${pop ? 'pop' : ''}">${inner}</g></g>`;
 }
@@ -78,9 +83,15 @@ export function sceneSVG(figId, outfit, { bg = false, pop = null, live = false, 
   );
 }
 
+/** Nur Wolken und Hügel, gleiche Grösse wie die Szene (für den Laufsteg). */
+export function backdropSVG() {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${VIEWBOX}" aria-hidden="true">${BACKGROUND}</svg>`;
+}
+
 /** Kleines Vorschaubild eines Teils für die Auswahlleiste. */
 export function thumbHTML(item) {
   if (item.emoji) return `<img src="${emojiSrc(item.emoji)}" alt="" draggable="false">`;
+  if (item.art) return `<svg viewBox="0 0 128 128" aria-hidden="true">${item.art}</svg>`;
   return `<svg viewBox="${item.thumb}" aria-hidden="true">${item.svg}</svg>`;
 }
 
