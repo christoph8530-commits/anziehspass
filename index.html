@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#A9DCFF">
+  <title>Anziehspass</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Start: Figur wählen -->
+  <section id="screen-start" class="screen">
+    <div id="figure-choice"></div>
+    <button id="btn-gallery" class="round big" aria-label="Galerie">
+      <img src="assets/emoji/emoji_u1f5bc.svg" alt="" draggable="false">
+      <span id="gallery-count" class="badge" hidden>0</span>
+    </button>
+  </section>
+
+  <!-- Anziehraum -->
+  <section id="screen-dress" class="screen" hidden>
+    <header class="toolbar">
+      <button id="btn-home" class="round" aria-label="Zurück"><img src="assets/emoji/emoji_u1f3e0.svg" alt="" draggable="false"></button>
+      <span class="spacer"></span>
+      <button id="btn-random" class="round" aria-label="Zufall"><img src="assets/emoji/emoji_u1f3b2.svg" alt="" draggable="false"></button>
+      <button id="btn-reset" class="round" aria-label="Alles ausziehen"><img src="assets/emoji/emoji_u1f9f9.svg" alt="" draggable="false"></button>
+      <button id="btn-photo" class="round photo" aria-label="Foto"><img src="assets/emoji/emoji_u1f4f7.svg" alt="" draggable="false"></button>
+    </header>
+    <div id="stage"></div>
+    <nav id="tabs"></nav>
+    <div id="tray"></div>
+  </section>
+
+  <!-- Galerie -->
+  <section id="screen-gallery" class="screen" hidden>
+    <header class="toolbar">
+      <button id="btn-gallery-home" class="round" aria-label="Zurück"><img src="assets/emoji/emoji_u1f3e0.svg" alt="" draggable="false"></button>
+    </header>
+    <div id="gallery-grid"></div>
+    <div id="gallery-empty" hidden><img src="assets/emoji/emoji_u1f4f7.svg" alt="" draggable="false"></div>
+  </section>
+
+  <!-- Elternmenü (lange auf ein Bild in der Galerie drücken) -->
+  <dialog id="look-dialog">
+    <div id="dialog-preview"></div>
+    <div class="dialog-buttons">
+      <button id="btn-download" class="text-btn">Bild herunterladen</button>
+      <button id="btn-share" class="text-btn" hidden>Teilen</button>
+      <button id="btn-delete" class="text-btn danger">Löschen</button>
+      <button id="btn-cancel" class="text-btn plain">Abbrechen</button>
+    </div>
+  </dialog>
+
+  <div id="flash"></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

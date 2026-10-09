@@ -1,0 +1,466 @@
+:root {
+  --sky-top: #a9dcff;
+  --sky-bottom: #e3f4ff;
+  --ink: #3a2d4a;
+  --card: #ffffff;
+  --accent: #ff6fa8;
+  --worn: #ffe14d;
+  --worn-ring: #ffb300;
+  --shadow: rgba(40, 60, 90, 0.18);
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  background: linear-gradient(var(--sky-top), var(--sky-bottom));
+  color: var(--ink);
+  font-family: ui-rounded, 'Segoe UI', system-ui, sans-serif;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
+  overscroll-behavior: none;
+}
+
+img {
+  pointer-events: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.screen {
+  position: fixed;
+  inset: 0;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+.screen[hidden] {
+  display: none !important;
+}
+
+/* --- Runde Knöpfe -------------------------------------------------------- */
+
+.round {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--card);
+  box-shadow: 0 5px 0 var(--shadow);
+  display: grid;
+  place-items: center;
+  flex: none;
+  transition: transform 0.08s;
+}
+
+.round img {
+  width: 40px;
+  height: 40px;
+}
+
+.round:active,
+.tile:active,
+.tab:active,
+.fig-btn:active,
+.look:active {
+  transform: translateY(4px) scale(0.97);
+}
+
+.round.big {
+  width: 84px;
+  height: 84px;
+}
+
+.round.big img {
+  width: 54px;
+  height: 54px;
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 15px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: 17px;
+  line-height: 30px;
+  text-align: center;
+}
+
+.round.photo {
+  background: #fff3c4;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+/* --- Start ---------------------------------------------------------------- */
+
+#screen-start {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+}
+
+#figure-choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 14px;
+  justify-content: center;
+  padding: 0 16px;
+  width: 100%;
+}
+
+.fig-btn {
+  width: min(30vw, 240px, calc((100dvh - 200px) * 400 / 520));
+  aspect-ratio: 400 / 520;
+  border-radius: 28px;
+  overflow: hidden;
+  background: linear-gradient(var(--sky-top), var(--sky-bottom));
+  box-shadow: 0 6px 0 var(--shadow), 0 0 0 5px #fff;
+  transition: transform 0.08s;
+}
+
+/* Hochformat: zwei Figuren oben, eine unten, dafür grösser */
+@media (orientation: portrait) {
+  .fig-btn {
+    width: min(42vw, 240px, calc((50dvh - 110px) * 400 / 520));
+  }
+}
+
+.fig-btn svg,
+.look svg,
+#dialog-preview svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --- Anziehraum ------------------------------------------------------------ */
+
+#screen-dress {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  grid-template-areas: 'bar' 'stage' 'tabs' 'tray';
+}
+
+#screen-dress .toolbar {
+  grid-area: bar;
+}
+
+#stage {
+  grid-area: stage;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#stage svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+#stage .item {
+  cursor: pointer;
+}
+
+#tabs {
+  grid-area: tabs;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 12px 6px;
+  background: #ffffffb3;
+}
+
+.tab {
+  width: 62px;
+  height: 62px;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  background: #ffffff80;
+  transition: transform 0.08s;
+}
+
+.tab img {
+  width: 42px;
+  height: 42px;
+}
+
+.tab.active {
+  background: var(--card);
+  box-shadow: 0 0 0 4px var(--accent);
+}
+
+#tray {
+  grid-area: tray;
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 10px 16px 16px;
+  background: #ffffffb3;
+  scrollbar-width: none;
+}
+
+#tray::-webkit-scrollbar {
+  display: none;
+}
+
+.tile {
+  position: relative;
+  flex: 0 0 96px;
+  height: 96px;
+  border-radius: 26px;
+  background: var(--card);
+  box-shadow: 0 5px 0 var(--shadow);
+  display: grid;
+  place-items: center;
+  transition: transform 0.08s;
+}
+
+.tile img,
+.tile svg {
+  width: 72px;
+  height: 72px;
+}
+
+.tile.worn {
+  background: var(--worn);
+  box-shadow: 0 5px 0 var(--shadow), inset 0 0 0 5px var(--worn-ring);
+}
+
+.tile.worn::after {
+  content: '★';
+  position: absolute;
+  top: 2px;
+  right: 9px;
+  color: #ff8f00;
+  font-size: 20px;
+}
+
+/* Querformat: Figur links, Auswahl rechts */
+@media (orientation: landscape) {
+  #screen-dress {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    grid-template-areas: 'bar bar' 'stage tabs' 'stage tray';
+  }
+
+  #tabs {
+    border-radius: 24px 0 0 0;
+  }
+
+  #tray {
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
+
+/* --- Galerie ---------------------------------------------------------------- */
+
+#screen-gallery {
+  display: flex;
+  flex-direction: column;
+}
+
+#gallery-grid {
+  flex: 1;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  padding: 4px 16px 24px;
+  align-content: start;
+}
+
+.look {
+  aspect-ratio: 400 / 520;
+  border-radius: 22px;
+  overflow: hidden;
+  background: linear-gradient(var(--sky-top), var(--sky-bottom));
+  box-shadow: 0 5px 0 var(--shadow), 0 0 0 4px #fff;
+  transition: transform 0.08s;
+}
+
+#gallery-empty {
+  flex: 1;
+  display: grid;
+  place-items: center;
+}
+
+#gallery-empty[hidden] {
+  display: none;
+}
+
+#gallery-empty img {
+  width: 140px;
+  opacity: 0.35;
+}
+
+/* --- Elternmenü ------------------------------------------------------------ */
+
+#look-dialog {
+  border: 0;
+  border-radius: 28px;
+  padding: 20px;
+  width: min(360px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+  color: var(--ink);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+#look-dialog::backdrop {
+  background: rgba(30, 40, 60, 0.45);
+}
+
+#dialog-preview {
+  width: 160px;
+  aspect-ratio: 400 / 520;
+  margin: 0 auto 16px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(var(--sky-top), var(--sky-bottom));
+}
+
+.dialog-buttons {
+  display: grid;
+  gap: 10px;
+}
+
+.text-btn {
+  min-height: 52px;
+  border-radius: 16px;
+  background: #e8f4ff;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.text-btn.danger {
+  background: #ffe1e1;
+  color: #b3261e;
+}
+
+.text-btn.plain {
+  background: none;
+}
+
+/* --- Animationen ------------------------------------------------------------ */
+
+.pop {
+  animation: pop 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0.2);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.bob {
+  animation: bob 3s ease-in-out infinite;
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.wiggle {
+  animation: wiggle 0.5s ease-in-out;
+  transform-origin: 50% 90%;
+}
+
+@keyframes wiggle {
+  25% {
+    transform: rotate(-4deg);
+  }
+  75% {
+    transform: rotate(4deg);
+  }
+}
+
+.bounce {
+  animation: bounce 0.4s ease-out;
+}
+
+@keyframes bounce {
+  40% {
+    transform: scale(1.25);
+  }
+}
+
+#flash {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+#flash.go {
+  animation: flash 0.45s ease-out;
+}
+
+@keyframes flash {
+  from {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bob,
+  .pop,
+  .wiggle {
+    animation: none;
+  }
+}
