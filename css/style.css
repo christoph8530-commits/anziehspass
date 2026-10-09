@@ -150,8 +150,16 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 28px;
+  gap: 24px;
+  overflow-y: auto;
+}
+
+/* Flexible Abstände oben und unten: zentriert, wenn Platz ist, sonst scrollbar.
+   Oben mindestens so viel Platz, dass die Stoppuhr nichts verdeckt. */
+#screen-start::before,
+#screen-start::after {
+  content: '';
+  flex: 1 0 56px;
 }
 
 #figure-choice {
@@ -164,7 +172,8 @@ button {
 }
 
 .fig-btn {
-  width: min(18vw, 220px, calc((100dvh - 190px) * 400 / 520));
+  width: min(17vw, 200px, calc((100vh - 260px) * 400 / 520));
+  width: min(17vw, 200px, calc((100dvh - 260px) * 400 / 520));
   aspect-ratio: 400 / 520;
   border-radius: 28px;
   overflow: hidden;
@@ -176,7 +185,8 @@ button {
 /* Hochformat: zwei Figuren pro Reihe, dafür grösser */
 @media (orientation: portrait) {
   .fig-btn {
-    width: min(42vw, 240px, calc(((100dvh - 200px) / 3 - 18px) * 400 / 520));
+    width: min(38vw, 220px, calc(((100vh - 300px) / 3 - 18px) * 400 / 520));
+    width: min(38vw, 220px, calc(((100dvh - 300px) / 3 - 18px) * 400 / 520));
   }
 }
 
@@ -420,6 +430,7 @@ button {
   border-radius: 28px;
   padding: 20px;
   width: min(360px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
   max-height: calc(100dvh - 32px);
   overflow-y: auto;
   color: var(--ink);
@@ -704,6 +715,7 @@ button {
 
 .panel {
   width: min(380px, 100%);
+  max-height: calc(100vh - 32px);
   max-height: calc(100dvh - 32px);
   overflow-y: auto;
   background: #fff;
