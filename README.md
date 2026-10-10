@@ -64,7 +64,8 @@ Oben rechts auf dem Startbildschirm ist die Stoppuhr ⏱️. Sie öffnet den Elt
 Nach 3 falschen PIN-Versuchen ist die Eingabe 30 Sekunden gesperrt.
 
 **Stimme:** Im Elternbereich unter «Stimme» lassen sich die deutschen Stimmen des Geräts
-auswählen, probehören und langsamer stellen. Klingt die Stimme abgehackt, hilft auf
+auswählen, probehören und langsamer stellen. Standard ist «Stimme des Geräts». «Probehören»
+zeigt darunter an, ob die Sprachausgabe funktioniert oder welchen Fehler Android meldet. Klingt die Stimme abgehackt, hilft auf
 Samsung-Geräten meist der Wechsel auf die Google-Sprachausgabe: Einstellungen →
 Allgemeine Verwaltung → Sprache → Sprachausgabe (Text-in-Sprache) → bevorzugtes Modul
 «Speech Services von Google», dort unter ⚙️ → Stimmdaten installieren → Deutsch

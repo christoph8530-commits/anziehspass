@@ -7,7 +7,18 @@
 
 import * as sound from './sound.js';
 import * as store from './storage.js';
-import { say, germanVoices, currentVoice, currentRate, setVoice, setRate, onVoicesChanged } from './speech.js';
+import {
+  say,
+  supported as speechSupported,
+  germanVoices,
+  currentVoiceUri,
+  currentRate,
+  setVoice,
+  setRate,
+  onVoicesChanged,
+  onSpeechStatus,
+  speechStatus,
+} from './speech.js';
 
 const $ = (sel) => document.querySelector(sel);
 const REMINDERS = [15, 10, 5, 1]; // Minuten vor Ende
@@ -270,19 +281,41 @@ function openParent() {
 // Auswahl der Stimme (die Stimmen kommen vom Gerät)
 function renderVoice() {
   const voices = germanVoices();
-  const current = currentVoice();
-  $('#voice-select').innerHTML = voices
-    .map((v) => `<option value="${v.voiceURI}"${v === current ? ' selected' : ''}>${v.name} (${v.lang})</option>`)
-    .join('');
-  $('#voice-select').hidden = voices.length < 2;
+  const uri = currentVoiceUri();
+  const option = (value, label) =>
+    `<option value="${value}"${value === (uri ?? '') ? ' selected' : ''}>${label}</option>`;
+  $('#voice-select').innerHTML =
+    option('', 'Stimme des Geräts (empfohlen)') + voices.map((v) => option(v.voiceURI, `${v.name} (${v.lang})`)).join('');
+  $('#voice-select').hidden = !speechSupported || voices.length === 0;
   for (const b of document.querySelectorAll('#voice-rate [data-rate]')) {
     b.classList.toggle('active', Number(b.dataset.rate) === currentRate());
   }
-  $('#voice-hint').textContent = voices.length
-    ? voices.length === 1
-      ? 'Nur eine deutsche Stimme vorhanden. Mehr und flüssigere Stimmen: Android-Einstellungen → Sprachausgabe → «Speech Services von Google» wählen und Deutsch installieren.'
-      : ''
-    : 'Keine deutsche Stimme gefunden. In den Android-Einstellungen unter «Sprachausgabe» eine deutsche Stimme installieren.';
+  renderSpeechStatus(speechStatus());
+}
+
+// Ergebnis des Sprachtests, damit man sieht, woran es liegt, wenn nichts zu hören ist
+function renderSpeechStatus(st) {
+  const voices = germanVoices().length;
+  let text = '';
+  if (!speechSupported || st.state === 'unsupported') {
+    text = 'Dieser Browser kann nicht sprechen. Bitte Chrome aktualisieren.';
+  } else if (st.state === 'pending') {
+    text = 'Sprachtest läuft …';
+  } else if (st.state === 'ok') {
+    text = `✓ Sprachausgabe funktioniert (${st.voice}). Nichts gehört? Medien-Lautstärke prüfen.`;
+  } else if (st.state === 'error') {
+    text =
+      `✗ Fehler «${st.error}». ` +
+      (/language|voice/.test(st.error ?? '')
+        ? 'Deutsche Stimme fehlt: Android-Einstellungen → Sprachausgabe → Stimmdaten installieren → Deutsch.'
+        : 'Android-Einstellungen → Sprachausgabe prüfen (bevorzugtes Modul und Deutsch installiert).');
+  } else if (st.state === 'silent') {
+    text =
+      '✗ Keine Rückmeldung vom Sprachdienst. Android-Einstellungen → Sprachausgabe: bevorzugtes Modul wählen und Deutsch installieren, dann App neu starten.';
+  } else if (voices === 0) {
+    text = 'Keine deutsche Stimme gefunden. Android-Einstellungen → Sprachausgabe → Deutsch installieren.';
+  }
+  $('#voice-hint').textContent = text;
 }
 
 function closeParent() {
@@ -322,7 +355,7 @@ $('#btn-stop-timer').addEventListener('click', () => {
 });
 
 $('#voice-select').addEventListener('change', (e) => {
-  setVoice(e.target.value);
+  setVoice(e.target.value || null);
   say('Hallo! So klinge ich.');
 });
 $('#voice-rate').addEventListener('click', (e) => {
@@ -334,6 +367,7 @@ $('#voice-rate').addEventListener('click', (e) => {
 });
 $('#btn-voice-test').addEventListener('click', () => say('Es regnet! Was braucht der Elefant im Regen? Eins, zwei, drei. Super gemacht!'));
 onVoicesChanged(() => !$('#parent').hidden && renderVoice());
+onSpeechStatus((st) => !$('#parent').hidden && renderSpeechStatus(st));
 
 $('#btn-lock-now').addEventListener('click', lock);
 $('#btn-change-pin').addEventListener('click', () => {

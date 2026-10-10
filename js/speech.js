@@ -1,69 +1,103 @@
 // Sprachausgabe auf Deutsch (für Kinder, die noch nicht lesen können).
-// Die Stimmen kommen vom Gerät. Welche Stimme und wie schnell, legen die Eltern im
-// Elternbereich fest. Ist keine Stimme verfügbar, passiert einfach nichts.
+//
+// Standard ist die Stimme, die das Gerät selbst für Deutsch wählt (am zuverlässigsten).
+// Im Elternbereich kann eine bestimmte Stimme gewählt werden. Bleibt diese stumm oder
+// meldet einen Fehler, wird automatisch nochmal mit der Gerätestimme gesprochen.
 
 import * as store from './storage.js';
 
-const supported = 'speechSynthesis' in window;
+export const supported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
 const settings = { uri: null, rate: 1, ...store.load('voice', {}) };
-let voice = null;
-let pending = null;
+let voice = null; // nur gesetzt, wenn die Eltern eine bestimmte Stimme gewählt haben
+let generation = 0; // jede neue Ansage erhöht den Zähler; alte Wiederholungen verfallen
 const listeners = new Set();
+
+// Letzter Zustand für den Sprachtest im Elternbereich
+let status = { state: supported ? 'idle' : 'unsupported', error: null, voice: null };
+const statusListeners = new Set();
+function setStatus(next) {
+  status = { ...status, ...next };
+  for (const fn of statusListeners) fn(status);
+}
 
 // Android meldet Sprachcodes teils als «de_CH» statt «de-CH».
 const langOf = (v) => (v.lang ?? '').replace('_', '-').toLowerCase();
 
 export function germanVoices() {
   if (!supported) return [];
-  return speechSynthesis.getVoices().filter((v) => langOf(v).startsWith('de'));
+  try {
+    return speechSynthesis.getVoices().filter((v) => langOf(v).startsWith('de'));
+  } catch {
+    return [];
+  }
 }
 
-// Ohne eigene Wahl: Schweizer Stimme, sonst eine Google-Stimme (klingt auf
-// Samsung-Geräten meist flüssiger als die Samsung-Stimme), sonst die erste deutsche.
 function pickVoice() {
-  const de = germanVoices();
-  voice =
-    de.find((v) => v.voiceURI === settings.uri) ??
-    de.find((v) => langOf(v) === 'de-ch') ??
-    de.find((v) => /google/i.test(v.name)) ??
-    de.find((v) => langOf(v) === 'de-de' && v.localService) ??
-    de[0] ??
-    null;
+  voice = settings.uri ? germanVoices().find((v) => v.voiceURI === settings.uri) ?? null : null;
   for (const fn of listeners) fn();
 }
 
 if (supported) {
   pickVoice();
-  speechSynthesis.addEventListener?.('voiceschanged', pickVoice);
+  try {
+    speechSynthesis.addEventListener('voiceschanged', pickVoice);
+  } catch {
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+}
+
+function speak(text, useChosenVoice, gen) {
+  const chosen = useChosenVoice ? voice : null;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = chosen?.lang ?? 'de-DE';
+  try {
+    if (chosen) u.voice = chosen;
+  } catch {
+    /* Stimme nicht verwendbar: Gerätestimme */
+  }
+  u.rate = settings.rate;
+  u.pitch = 1;
+  let started = false;
+  let retried = false;
+  const fallback = () => {
+    if (retried || !chosen || gen !== generation) return;
+    retried = true;
+    speechSynthesis.cancel();
+    speak(text, false, gen);
+  };
+  u.onstart = () => {
+    started = true;
+    if (gen !== generation) return;
+    setStatus({ state: 'ok', error: null, voice: chosen?.name ?? 'Stimme des Geräts' });
+  };
+  u.onerror = (e) => {
+    if (e.error === 'interrupted' || e.error === 'canceled' || gen !== generation) return;
+    setStatus({ state: 'error', error: e.error ?? 'unbekannt', voice: chosen?.name ?? 'Stimme des Geräts' });
+    fallback();
+  };
+  setStatus({ state: 'pending', error: null, voice: chosen?.name ?? 'Stimme des Geräts' });
+  speechSynthesis.speak(u);
+  // Keine Rückmeldung? Dann mit der Gerätestimme nochmal versuchen.
+  setTimeout(() => {
+    if (started || gen !== generation) return;
+    if (chosen) fallback();
+    else if (status.state === 'pending') setStatus({ state: 'silent' });
+  }, 3000);
 }
 
 export function say(text) {
   if (!supported) return;
   try {
-    clearTimeout(pending);
-    const speak = () => {
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = voice?.lang ?? 'de-DE';
-      if (voice) u.voice = voice;
-      // Tonhöhe bewusst 1: veränderte Tonhöhe klingt auf manchen Android-Geräten abgehackt
-      u.rate = settings.rate;
-      u.pitch = 1;
-      speechSynthesis.speak(u);
-    };
-    // Sofort nach cancel() zu sprechen, stottert auf Android; deshalb kurz warten.
-    if (speechSynthesis.speaking || speechSynthesis.pending) {
-      speechSynthesis.cancel();
-      pending = setTimeout(speak, 120);
-    } else {
-      speak();
-    }
-  } catch {
-    /* keine Sprachausgabe verfügbar */
+    speechSynthesis.cancel();
+    if (speechSynthesis.paused) speechSynthesis.resume();
+    speak(text, true, ++generation);
+  } catch (e) {
+    setStatus({ state: 'error', error: e?.message ?? 'unbekannt' });
   }
 }
 
 export function stopSpeaking() {
-  clearTimeout(pending);
+  generation++;
   try {
     if (supported) speechSynthesis.cancel();
   } catch {
@@ -71,11 +105,13 @@ export function stopSpeaking() {
   }
 }
 
-export const currentVoice = () => voice;
+export const currentVoiceUri = () => settings.uri;
 export const currentRate = () => settings.rate;
+export const speechStatus = () => status;
 
+// uri = null: Stimme des Geräts
 export function setVoice(uri) {
-  settings.uri = uri;
+  settings.uri = uri || null;
   store.save('voice', settings);
   pickVoice();
 }
@@ -85,7 +121,10 @@ export function setRate(rate) {
   store.save('voice', settings);
 }
 
-// Benachrichtigt, wenn die Stimmen des Geräts (nach)geladen wurden.
 export function onVoicesChanged(fn) {
   listeners.add(fn);
+}
+
+export function onSpeechStatus(fn) {
+  statusListeners.add(fn);
 }
