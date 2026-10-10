@@ -7,6 +7,7 @@
 
 import * as sound from './sound.js';
 import * as store from './storage.js';
+import { say } from './speech.js';
 
 const $ = (sel) => document.querySelector(sel);
 const REMINDERS = [15, 10, 5, 1]; // Minuten vor Ende
@@ -27,20 +28,6 @@ async function hash(pin) {
   const data = new TextEncoder().encode('anziehspass:' + pin);
   const digest = await crypto.subtle.digest('SHA-256', data);
   return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, '0')).join('');
-}
-
-function say(text) {
-  try {
-    if (!('speechSynthesis' in window)) return;
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'de-DE';
-    u.rate = 0.9;
-    u.pitch = 1.1;
-    speechSynthesis.speak(u);
-  } catch {
-    /* keine Sprachausgabe verfügbar */
-  }
 }
 
 const remaining = () => (timer ? timer.end - Date.now() : 0);

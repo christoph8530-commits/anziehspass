@@ -50,5 +50,7 @@ export const lullaby = () =>
 // Fröhliches «Gespeichert»
 export const saved = () =>
   [[659, 0], [784, 0.1], [1047, 0.2]].forEach(([hz, delay]) => tone(hz, hz, 0.18, { vol: 0.14, delay }));
+// Einzelner Ton (z.B. beim Zählen, mit steigender Tonhöhe)
+export const note = (hz) => tone(hz, hz * 1.02, 0.15, { vol: 0.12 });
 export const sweep = () => tone(900, 200, 0.35, { type: 'triangle', vol: 0.12 });
 

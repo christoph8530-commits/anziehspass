@@ -155,6 +155,9 @@ const SHARED_ANCHORS = {
 export const FIGURES = {
   pig: {
     name: 'Schweinchen',
+    // für die Sprachausgabe: «Was braucht das Schweinchen?», «Gib dem Schweinchen …»
+    nom: 'das Schweinchen',
+    dat: 'dem Schweinchen',
     colors: { fill: '#F8B5CB', line: '#D9799B' },
     head: pigHead,
     anchors: {
@@ -166,6 +169,9 @@ export const FIGURES = {
   },
   dog: {
     name: 'Welpe',
+    // für die Sprachausgabe: «Was braucht der Welpe?», «Gib dem Welpen …»
+    nom: 'der Welpe',
+    dat: 'dem Welpen',
     colors: { fill: '#B07A45', line: '#7A5230' },
     head: dogHead,
     anchors: {
@@ -177,6 +183,9 @@ export const FIGURES = {
   },
   rabbit: {
     name: 'Häschen',
+    // für die Sprachausgabe: «Was braucht das Häschen?», «Gib dem Häschen …»
+    nom: 'das Häschen',
+    dat: 'dem Häschen',
     colors: { fill: '#D6B48C', line: '#A3825D' },
     head: rabbitHead,
     anchors: {
@@ -188,6 +197,9 @@ export const FIGURES = {
   },
   elephant: {
     name: 'Elefant',
+    // für die Sprachausgabe: «Was braucht der Elefant?», «Gib dem Elefanten …»
+    nom: 'der Elefant',
+    dat: 'dem Elefanten',
     colors: { fill: '#A7BACB', line: '#6E8499' },
     head: elephantHead,
     anchors: {
@@ -199,6 +211,9 @@ export const FIGURES = {
   },
   dormouse: {
     name: 'Siebenschläfer',
+    // für die Sprachausgabe: «Was braucht der Siebenschläfer?», «Gib dem Siebenschläfer …»
+    nom: 'der Siebenschläfer',
+    dat: 'dem Siebenschläfer',
     colors: { fill: '#BFA88E', line: '#8C7660' },
     head: dormouseHead,
     back: dormouseTail,

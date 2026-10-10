@@ -35,6 +35,7 @@
       </button>
     </header>
     <div id="stage"></div>
+    <button id="btn-games" class="round games" aria-label="Spiele"><img src="assets/emoji/emoji_u1f3ae.svg" alt="" draggable="false"></button>
     <nav id="tabs"></nav>
     <div id="tray"></div>
   </section>
@@ -56,6 +57,44 @@
     <header class="toolbar overlay">
       <button id="btn-show-home" class="round" aria-label="Zurück"><img src="assets/emoji/emoji_u1f3e0.svg" alt="" draggable="false"></button>
     </header>
+  </section>
+
+  <!-- Spielmenü -->
+  <section id="screen-games" class="screen" hidden>
+    <header class="toolbar">
+      <button id="btn-games-home" class="round" aria-label="Zurück"><img src="assets/emoji/emoji_u1f3e0.svg" alt="" draggable="false"></button>
+    </header>
+    <div id="games-figure"></div>
+    <div id="games-grid">
+      <button class="game-tile" data-game="weather" aria-label="Wetter-Spiel"><img src="assets/emoji/emoji_u1f326.svg" alt="" draggable="false"></button>
+      <button class="game-tile" data-game="memory" aria-label="Memory"><img src="assets/emoji/emoji_u1f3b4.svg" alt="" draggable="false"></button>
+      <button class="game-tile" data-game="count" aria-label="Zählen"><img src="assets/emoji/emoji_u1f522.svg" alt="" draggable="false"></button>
+      <button class="game-tile" data-game="missing" aria-label="Was fehlt?"><img src="assets/emoji/emoji_u1f50d.svg" alt="" draggable="false"></button>
+    </div>
+  </section>
+
+  <!-- Ein Spiel -->
+  <section id="screen-game" class="screen" hidden>
+    <header class="toolbar">
+      <button id="btn-game-back" class="round" aria-label="Zurück"><img src="assets/emoji/emoji_u1f3ae.svg" alt="" draggable="false"></button>
+      <div id="game-stars"></div>
+      <button id="btn-game-say" class="round" aria-label="Nochmal hören"><img src="assets/emoji/emoji_u1f50a.svg" alt="" draggable="false"></button>
+    </header>
+    <div id="game-stage">
+      <div id="game-scene"></div>
+      <div id="game-overlay"></div>
+    </div>
+    <div id="game-tray"></div>
+    <div id="game-win" class="layer" hidden>
+      <div class="win-card">
+        <img class="trophy" src="assets/emoji/emoji_u1f3c6.svg" alt="" draggable="false">
+        <div id="win-figure"></div>
+        <div class="win-buttons">
+          <button id="btn-win-again" class="round big" aria-label="Nochmal"><img src="assets/emoji/emoji_u1f501.svg" alt="" draggable="false"></button>
+          <button id="btn-win-menu" class="round big" aria-label="Andere Spiele"><img src="assets/emoji/emoji_u1f3ae.svg" alt="" draggable="false"></button>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- Elternmenü (lange auf ein Bild in der Galerie drücken) -->

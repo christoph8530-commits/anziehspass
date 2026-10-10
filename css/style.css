@@ -843,3 +843,456 @@ button {
   opacity: 0.35;
   pointer-events: none;
 }
+
+/* --- Minispiele ------------------------------------------------------------------- */
+
+#screen-dress #btn-games {
+  grid-area: stage;
+  align-self: end;
+  justify-self: end;
+  margin: 0 14px 14px 0;
+  z-index: 2;
+  background: #e3f2fd;
+}
+
+#screen-games {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}
+
+#screen-games .toolbar {
+  align-self: stretch;
+}
+
+#games-figure {
+  width: min(42vw, 200px, calc((100vh - 420px) * 400 / 520));
+  aspect-ratio: 400 / 520;
+  flex: none;
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(var(--sky-top), var(--sky-bottom));
+  box-shadow: 0 0 0 4px #fff;
+}
+
+#games-figure svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#games-grid {
+  display: grid;
+  grid-template-columns: repeat(2, min(40vw, 170px));
+  gap: 16px;
+  padding: 20px 16px 24px;
+}
+
+.game-tile {
+  aspect-ratio: 1;
+  border-radius: 32px;
+  background: var(--card);
+  box-shadow: 0 6px 0 var(--shadow);
+  display: grid;
+  place-items: center;
+  transition: transform 0.08s;
+}
+
+.game-tile:nth-child(1) {
+  background: #e1f5fe;
+}
+
+.game-tile:nth-child(2) {
+  background: #fce4ec;
+}
+
+.game-tile:nth-child(3) {
+  background: #fff8e1;
+}
+
+.game-tile:nth-child(4) {
+  background: #e8f5e9;
+}
+
+.game-tile img {
+  width: 62%;
+}
+
+.game-tile:active {
+  transform: translateY(4px) scale(0.97);
+}
+
+#screen-game {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas: 'bar' 'stage' 'tray';
+}
+
+#screen-game .toolbar {
+  grid-area: bar;
+  justify-content: space-between;
+}
+
+#screen-game[data-game='memory'] {
+  grid-template-rows: auto minmax(0, 0.75fr) minmax(0, 1.25fr);
+}
+
+#game-stars {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+}
+
+#game-stars img {
+  width: 30px;
+  height: 30px;
+  filter: grayscale(1);
+  opacity: 0.3;
+  transition: opacity 0.3s, filter 0.3s;
+}
+
+#game-stars img.on {
+  filter: none;
+  opacity: 1;
+  animation: bounce 0.4s ease-out;
+}
+
+#game-stage {
+  grid-area: stage;
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  transition: background 0.6s;
+}
+
+#game-scene,
+#game-overlay {
+  position: absolute;
+  inset: 0;
+}
+
+#game-scene svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+#game-overlay {
+  pointer-events: none;
+}
+
+.weather-icon {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  width: min(24%, 110px);
+  animation: bob 3s ease-in-out infinite;
+}
+
+.particle {
+  position: absolute;
+  top: -8%;
+  width: 22px;
+  animation: fall linear infinite;
+}
+
+@keyframes fall {
+  to {
+    top: 105%;
+  }
+}
+
+#game-tray {
+  grid-area: tray;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  gap: 12px;
+  padding: 14px 16px 18px;
+  background: #ffffffb3;
+  overflow-y: auto;
+}
+
+#game-tray:empty {
+  min-height: 116px;
+}
+
+#game-tray .tile.done {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.nope {
+  animation: shake 0.4s;
+}
+
+/* Memory */
+#game-tray.memory {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), min(21vw, 150px, 15vh));
+  grid-auto-rows: min(21vw, 150px, 15vh);
+  justify-content: center;
+}
+
+#game-tray.memory.cols-3 {
+  --cols: 3;
+}
+
+#game-tray.memory.cols-4 {
+  --cols: 4;
+}
+
+#game-tray.memory.cols-5 {
+  --cols: 5;
+}
+
+.card {
+  position: relative;
+  perspective: 600px;
+}
+
+.card .face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  backface-visibility: hidden;
+  transition: transform 0.35s;
+  box-shadow: 0 4px 0 var(--shadow);
+}
+
+.card .back {
+  background: linear-gradient(135deg, #ff8ab8, #ba68c8);
+}
+
+.card .back img {
+  width: 45%;
+  opacity: 0.9;
+}
+
+.card .front {
+  background: #fff;
+  transform: rotateY(180deg);
+}
+
+.card .front img,
+.card .front svg {
+  width: 78%;
+  height: 78%;
+}
+
+.card.open .back {
+  transform: rotateY(180deg);
+}
+
+.card.open .front {
+  transform: rotateY(360deg);
+}
+
+.card.done .front {
+  background: var(--worn);
+  box-shadow: 0 4px 0 var(--shadow), inset 0 0 0 4px var(--worn-ring);
+}
+
+/* Zählen */
+.count-bubble {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100% - 24px);
+  padding: 8px 14px;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.count-number {
+  font-size: 44px;
+  font-weight: 900;
+  color: #5c6bc0;
+  min-width: 40px;
+  text-align: center;
+}
+
+.count-slots {
+  display: grid;
+  grid-template-columns: repeat(5, 36px);
+  gap: 4px;
+}
+
+.count-slots .slot {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px dashed #c5cae9;
+  display: grid;
+  place-items: center;
+}
+
+.count-slots .slot img {
+  width: 28px;
+  opacity: 0.18;
+  filter: grayscale(1);
+}
+
+.count-slots .slot.on {
+  border-style: solid;
+  border-color: #ffd54f;
+  background: #fff8e1;
+}
+
+.count-slots .slot.on img {
+  opacity: 1;
+  filter: none;
+}
+
+#game-tray.count .obj {
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 4px 0 var(--shadow);
+  display: grid;
+  place-items: center;
+}
+
+#game-tray.count .obj img {
+  width: 52px;
+}
+
+#game-tray.count .obj.used {
+  visibility: hidden;
+}
+
+.flyer {
+  position: fixed;
+  z-index: 60;
+  pointer-events: none;
+}
+
+/* Was fehlt? Vorhang */
+.curtain i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 51%;
+  background: repeating-linear-gradient(90deg, #c62828 0 18px, #b71c1c 18px 30px);
+  transition: transform 0.6s ease-in-out;
+}
+
+.curtain i:first-child {
+  left: 0;
+  transform: translateX(-100%);
+}
+
+.curtain i:last-child {
+  right: 0;
+  transform: translateX(100%);
+}
+
+.curtain.closed i {
+  transform: translateX(0);
+}
+
+/* Geschafft */
+#game-win {
+  z-index: 800;
+  background: rgba(30, 40, 80, 0.45);
+  overflow: hidden;
+}
+
+.win-card {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 28px 24px 22px;
+  border-radius: 36px;
+  background: #fff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: pop 0.5s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+.win-card .trophy {
+  position: absolute;
+  top: -62px;
+  width: 96px;
+  animation: wiggle 1.2s ease-in-out infinite;
+}
+
+#win-figure {
+  width: min(48vw, 200px);
+  aspect-ratio: 400 / 520;
+  border-radius: 24px;
+  overflow: hidden;
+  background: linear-gradient(var(--sky-top), var(--sky-bottom));
+}
+
+#win-figure svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.win-buttons {
+  display: flex;
+  gap: 24px;
+}
+
+#game-win .confetti {
+  z-index: 1;
+}
+
+@media (orientation: landscape) {
+  #screen-game,
+  #screen-game[data-game='memory'] {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    grid-template-areas: 'bar bar' 'stage tray';
+  }
+
+  #game-tray {
+    border-radius: 24px 0 0 0;
+  }
+
+  #game-tray.memory {
+    grid-template-columns: repeat(var(--cols, 3), min(10vw, 130px, 20vh));
+    grid-auto-rows: min(10vw, 130px, 20vh);
+    align-content: center;
+  }
+
+  #screen-games {
+    justify-content: center;
+  }
+
+  #games-grid {
+    grid-template-columns: repeat(4, min(20vw, 160px));
+  }
+}
+
+/* Tablets: grössere Antwort-Kacheln in den Spielen */
+@media (min-width: 700px) and (min-height: 700px) {
+  #game-tray .tile,
+  #game-tray.count .obj {
+    width: 112px;
+    height: 112px;
+    border-radius: 30px;
+  }
+
+  #game-tray .tile img,
+  #game-tray .tile svg,
+  #game-tray.count .obj img {
+    width: 84px;
+    height: 84px;
+  }
+}

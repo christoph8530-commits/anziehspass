@@ -257,6 +257,12 @@ const PLUSHBUNNY =
   `<ellipse cx="64" cy="61" rx="4" ry="3" fill="#F48FB1"/>` +
   `<path d="M54 94 h20 M64 84 v20" stroke="#CFD8DC" stroke-width="3" stroke-linecap="round" stroke-dasharray="3 4"/>`;
 
+const BEANIE =
+  `<path d="M20 96 C20 40 108 40 108 96 Z" fill="#E53935" stroke="#B71C1C" stroke-width="4" stroke-linejoin="round"/>` +
+  `<path d="M44 52 C40 66 40 82 42 94 M64 46 V94 M84 52 C88 66 88 82 86 94" fill="none" stroke="#C62828" stroke-width="4" stroke-linecap="round"/>` +
+  `<path d="M14 90 H114 Q120 100 114 110 H14 Q8 100 14 90 Z" fill="#fff" stroke="#CFD8DC" stroke-width="3"/>` +
+  `<circle cx="64" cy="34" r="14" fill="#fff" stroke="#CFD8DC" stroke-width="3"/>`;
+
 const HEARTGLASSES =
   heart(34, 64, 22, '#F48FB1', '#C2185B') +
   heart(94, 64, 22, '#F48FB1', '#C2185B') +
@@ -295,6 +301,7 @@ export const ITEMS = [
   { id: 'partyhat', cat: 'head', slot: 'head', art: PARTYHAT, anchor: 'head', size: 0.9, ay: 0.86 },
   { id: 'wizardhat', cat: 'head', slot: 'head', art: WIZARDHAT, anchor: 'head', size: 1.35, ay: 0.78 },
   { id: 'piratehat', cat: 'head', slot: 'head', art: PIRATEHAT, anchor: 'head', size: 1.4, ay: 0.74 },
+  { id: 'beanie', cat: 'head', slot: 'head', art: BEANIE, anchor: 'head', size: 1.1, ay: 0.78 },
   { id: 'nightcap', cat: 'head', slot: 'head', art: NIGHTCAP, anchor: 'head', size: 1.15, ay: 0.82 },
   { id: 'wreath', cat: 'head', slot: 'head', art: WREATH, anchor: 'head', size: 1.15, ay: 0.62 },
   { id: 'gradcap', cat: 'head', slot: 'head', emoji: '1f393', anchor: 'head', size: 1.1, ay: 0.72 },

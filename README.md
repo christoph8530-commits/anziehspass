@@ -30,8 +30,22 @@ Technisch ist es eine Web-App (PWA) aus reinem HTML, CSS und JavaScript, ohne Bu
 **Elternmenü:** In der Galerie **lange auf ein Bild drücken**. Dort kannst du das Bild
 herunterladen, teilen (z.B. per WhatsApp) oder löschen.
 
-Es gibt 61 Teile. Pro Slot trägt die Figur genau ein Teil: Ein neuer Hut ersetzt den alten.
+Es gibt 62 Teile. Pro Slot trägt die Figur genau ein Teil: Ein neuer Hut ersetzt den alten.
 Schleife und Hut, Flügel und Ballon oder Medaille und Kleid lassen sich aber kombinieren.
+
+## Minispiele 🎮
+
+Im Anziehraum unten rechts auf der Bühne. Alle Spiele laufen mit der gewählten Figur,
+die Aufgaben stellt eine Stimme (🔊 = nochmal hören). Fehler werden nicht bestraft: das Teil
+wackelt kurz, dann nochmal probieren. Am Ende gibt es einen Pokal 🏆; mit 🔁 wird die
+nächste Runde etwas schwieriger.
+
+| Spiel | Aufgabe | Fördert |
+|---|---|---|
+| 🌦️ Wetter | Figur passend anziehen: Regen, Sonne, Schnee, Schlafenszeit, Meer, Party | Alltagswissen, Begründen |
+| 🎴 Memory | Paare finden (3 bis 6 Paare), jedes Paar wird angezogen | Gedächtnis, Konzentration |
+| 🔢 Zählen | «Gib dem Elefanten 3 Ballons!», die Stimme zählt mit (bis 5, später 7 und 10) | Zahlen, Mengen |
+| 🔍 Was fehlt? | Vorhang zu, ein Teil verschwindet, welches war es? | Beobachten, Merken |
 
 ## Spielzeit-Timer (Elternbereich)
 

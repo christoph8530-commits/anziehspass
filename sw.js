@@ -1,14 +1,16 @@
 // Service Worker: macht die App offline-fähig.
 // Bei Änderungen an der App VERSION hochzählen, damit Handys die neue Version laden.
 
-const VERSION = 'v6';
+const VERSION = 'v7';
 const CACHE = `anziehspass-${VERSION}`;
 
 const EMOJI = [
-  '1f319', '1f338', '1f33b', '1f366', '1f36d', '1f380', '1f388', '1f392', '1f393', '1f3a9',
-  '1f3b2', '1f3e0', '1f451', '1f452', '1f453', '1f457', '1f45f', '1f4be', '1f512', '1f576',
-  '1f5bc', '1f6fc', '1f947', '1f955', '1f97d', '1f97e', '1f9b4', '1f9e2', '1f9e3', '1f9f8',
-  '1f9f9', '1fa81', '1fa84', '1faa3', '1fabd', '23f1', '23f3', '25b6', '2602', '26bd', '26d1',
+  '1f30a', '1f319', '1f326', '1f327', '1f338', '1f33b', '1f34e', '1f366', '1f36d', '1f380',
+  '1f388', '1f389', '1f392', '1f393', '1f3a9', '1f3ae', '1f3b2', '1f3b4', '1f3c6', '1f3e0',
+  '1f451', '1f452', '1f453', '1f457', '1f45f', '1f4a7', '1f4be', '1f501', '1f50a', '1f50d',
+  '1f512', '1f522', '1f576', '1f5bc', '1f6fc', '1f947', '1f955', '1f97d', '1f97e', '1f9b4',
+  '1f9e2', '1f9e3', '1f9f8', '1f9f9', '1fa81', '1fa84', '1faa3', '1fabd', '23f1', '23f3', '25b6',
+  '2600', '2602', '26bd', '26d1', '2744', '2b50',
 ];
 
 const FILES = [
@@ -23,6 +25,9 @@ const FILES = [
   'js/sound.js',
   'js/storage.js',
   'js/timer.js',
+  'js/speech.js',
+  'js/fx.js',
+  'js/games.js',
   'icons/icon.svg',
   'icons/icon-192.png',
   'icons/icon-512.png',

@@ -4,6 +4,8 @@ import { sceneSVG, thumbHTML, scenePNG, backdropSVG } from './scene.js';
 import * as sound from './sound.js';
 import * as store from './storage.js';
 import { initTimer } from './timer.js';
+import { played, confetti } from './fx.js';
+import { initGames } from './games.js';
 
 const $ = (sel) => document.querySelector(sel);
 const MAX_LOOKS = 100;
@@ -23,6 +25,8 @@ const screens = {
   dress: $('#screen-dress'),
   gallery: $('#screen-gallery'),
   show: $('#screen-show'),
+  games: $('#screen-games'),
+  game: $('#screen-game'),
 };
 
 function show(name) {
@@ -38,10 +42,6 @@ function replay(el, cls) {
   void el.offsetWidth; // Animation neu starten
   el.classList.add(cls);
 }
-
-// Wartet auf das Ende einer Animation, spätestens nach der geplanten Dauer
-// (falls der Browser im Hintergrund keine Frames zeichnet).
-const played = (anim, ms) => Promise.race([anim.finished, new Promise((r) => setTimeout(r, ms + 150))]);
 
 // --- Startbildschirm -------------------------------------------------------
 
@@ -335,29 +335,6 @@ function waitOrTap(ms) {
   });
 }
 
-function confetti() {
-  const colors = ['#FF6FA8', '#FFD54F', '#4FC3F7', '#81C784', '#BA68C8', '#FF8A65'];
-  const height = runway.clientHeight;
-  for (let i = 0; i < 44; i++) {
-    const piece = document.createElement('i');
-    piece.className = 'confetti';
-    piece.style.background = colors[i % colors.length];
-    piece.style.left = `${Math.random() * 100}%`;
-    runway.append(piece);
-    const drift = (Math.random() - 0.5) * 160;
-    const duration = 1800 + Math.random() * 1400;
-    const delay = Math.random() * 400;
-    const anim = piece.animate(
-      [
-        { transform: 'translate(0, -30px) rotate(0deg)' },
-        { transform: `translate(${drift}px, ${height + 40}px) rotate(${Math.random() * 900}deg)` },
-      ],
-      { duration, delay, easing: 'cubic-bezier(.2,.5,.4,1)', fill: 'both' }
-    );
-    played(anim, duration + delay).then(() => piece.remove());
-  }
-}
-
 async function presentLook(look, token) {
   const el = document.createElement('div');
   el.className = 'runway-look';
@@ -366,7 +343,7 @@ async function presentLook(look, token) {
   await played(el.animate(WALK_IN, { duration: 1500, easing: 'ease-out', fill: 'both' }), 1500);
   if (token !== showToken) return;
   sound.fanfare();
-  confetti();
+  confetti(runway);
   el.firstElementChild.animate(
     [{ transform: 'scale(1)' }, { transform: 'scale(1.08) translateY(-10px)' }, { transform: 'scale(1)' }],
     { duration: 600, easing: 'ease-out' }
@@ -466,9 +443,22 @@ $('#btn-cancel').addEventListener('click', () => dialog.close());
 
 renderStart();
 show('start');
+const games = initGames({
+  show,
+  getFig: () => state.fig,
+  getOutfit: () => outfit(),
+  onExit: () => openDress(state.fig),
+});
+
+$('#btn-games').addEventListener('click', () => {
+  sound.tap();
+  games.openMenu();
+});
+
 initTimer({
-  // Läuft gerade die Modenschau, wird sie beim Sperren beendet.
+  // Laufende Spiele und die Modenschau werden beim Sperren beendet.
   onLock: () => {
+    games.stop();
     if (screens.show.hidden) return;
     stopShow();
     renderGallery();
