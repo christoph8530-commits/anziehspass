@@ -275,7 +275,20 @@ function openParent() {
   ).join('');
   renderParentStatus();
   renderVoice();
+  renderVersion();
   $('#parent').hidden = false;
+}
+
+// Installierte App-Version (Name des Offline-Speichers), hilfreich bei Fragen zu Updates
+function renderVersion() {
+  if (!('caches' in window)) return;
+  caches
+    .keys()
+    .then((keys) => {
+      const v = keys.find((k) => k.startsWith('anziehspass-'));
+      $('#app-version').textContent = v ? `App-Version ${v.replace('anziehspass-', '')}` : '';
+    })
+    .catch(() => {});
 }
 
 // Auswahl der Stimme (die Stimmen kommen vom Gerät)
