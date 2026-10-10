@@ -7,7 +7,7 @@
 
 import * as sound from './sound.js';
 import * as store from './storage.js';
-import { say } from './speech.js';
+import { say, germanVoices, currentVoice, currentRate, setVoice, setRate, onVoicesChanged } from './speech.js';
 
 const $ = (sel) => document.querySelector(sel);
 const REMINDERS = [15, 10, 5, 1]; // Minuten vor Ende
@@ -263,7 +263,26 @@ function openParent() {
     (m) => `<button class="text-btn" data-min="${m}">${m} Min.</button>`
   ).join('');
   renderParentStatus();
+  renderVoice();
   $('#parent').hidden = false;
+}
+
+// Auswahl der Stimme (die Stimmen kommen vom Gerät)
+function renderVoice() {
+  const voices = germanVoices();
+  const current = currentVoice();
+  $('#voice-select').innerHTML = voices
+    .map((v) => `<option value="${v.voiceURI}"${v === current ? ' selected' : ''}>${v.name} (${v.lang})</option>`)
+    .join('');
+  $('#voice-select').hidden = voices.length < 2;
+  for (const b of document.querySelectorAll('#voice-rate [data-rate]')) {
+    b.classList.toggle('active', Number(b.dataset.rate) === currentRate());
+  }
+  $('#voice-hint').textContent = voices.length
+    ? voices.length === 1
+      ? 'Nur eine deutsche Stimme vorhanden. Mehr und flüssigere Stimmen: Android-Einstellungen → Sprachausgabe → «Speech Services von Google» wählen und Deutsch installieren.'
+      : ''
+    : 'Keine deutsche Stimme gefunden. In den Android-Einstellungen unter «Sprachausgabe» eine deutsche Stimme installieren.';
 }
 
 function closeParent() {
@@ -301,6 +320,20 @@ $('#btn-stop-timer').addEventListener('click', () => {
   renderParentStatus();
   updateBar();
 });
+
+$('#voice-select').addEventListener('change', (e) => {
+  setVoice(e.target.value);
+  say('Hallo! So klinge ich.');
+});
+$('#voice-rate').addEventListener('click', (e) => {
+  const rate = Number(e.target.closest('[data-rate]')?.dataset.rate);
+  if (!rate) return;
+  setRate(rate);
+  renderVoice();
+  say('Noch 5 Minuten, dann ist Schluss für heute.');
+});
+$('#btn-voice-test').addEventListener('click', () => say('Es regnet! Was braucht der Elefant im Regen? Eins, zwei, drei. Super gemacht!'));
+onVoicesChanged(() => !$('#parent').hidden && renderVoice());
 
 $('#btn-lock-now').addEventListener('click', lock);
 $('#btn-change-pin').addEventListener('click', () => {

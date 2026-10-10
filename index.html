@@ -141,6 +141,14 @@
       <p class="panel-hint">Neuen Timer starten:</p>
       <div id="duration-grid"></div>
       <p class="panel-hint">Erinnerung bei 15, 10, 5 und 1 Minute, danach wird die App gesperrt.</p>
+      <h2 class="panel-sub">Stimme</h2>
+      <select id="voice-select" class="text-btn" aria-label="Stimme"></select>
+      <div class="panel-row" id="voice-rate">
+        <button class="text-btn" data-rate="0.85">Langsamer</button>
+        <button class="text-btn" data-rate="1">Normal</button>
+      </div>
+      <button id="btn-voice-test" class="text-btn">Probehören</button>
+      <p class="panel-hint" id="voice-hint"></p>
       <button id="btn-lock-now" class="text-btn danger">Jetzt sperren</button>
       <button id="btn-change-pin" class="text-btn">PIN ändern</button>
       <button id="btn-parent-close" class="text-btn plain">Schliessen</button>

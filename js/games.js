@@ -10,7 +10,7 @@ import { FIGURES } from './figures.js';
 import { ITEMS, ITEMS_BY_ID, SLOTS, emojiSrc } from './items.js';
 import { sceneSVG, thumbHTML } from './scene.js';
 import * as sound from './sound.js';
-import { say } from './speech.js';
+import { say, stopSpeaking } from './speech.js';
 import { confetti, played, sleep } from './fx.js';
 
 const $ = (sel) => document.querySelector(sel);
@@ -103,11 +103,7 @@ async function start(game) {
 function stop() {
   session++;
   onTray = null;
-  try {
-    speechSynthesis.cancel();
-  } catch {
-    /* egal */
-  }
+  stopSpeaking();
 }
 
 function win(s) {

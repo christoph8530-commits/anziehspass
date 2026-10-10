@@ -63,6 +63,13 @@ Oben rechts auf dem Startbildschirm ist die Stoppuhr ⏱️. Sie öffnet den Elt
 
 Nach 3 falschen PIN-Versuchen ist die Eingabe 30 Sekunden gesperrt.
 
+**Stimme:** Im Elternbereich unter «Stimme» lassen sich die deutschen Stimmen des Geräts
+auswählen, probehören und langsamer stellen. Klingt die Stimme abgehackt, hilft auf
+Samsung-Geräten meist der Wechsel auf die Google-Sprachausgabe: Einstellungen →
+Allgemeine Verwaltung → Sprache → Sprachausgabe (Text-in-Sprache) → bevorzugtes Modul
+«Speech Services von Google», dort unter ⚙️ → Stimmdaten installieren → Deutsch
+herunterladen und eine Stimme wählen. Danach die App neu starten.
+
 **PIN vergessen?** In Chrome: Einstellungen → Website-Einstellungen → Alle Websites →
 `christoph8530-commits.github.io` → Daten löschen. Achtung: Das löscht auch die Galerie.
 
