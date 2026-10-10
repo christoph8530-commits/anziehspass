@@ -23,6 +23,15 @@ function setStatus(next) {
 // Android meldet Sprachcodes teils als «de_CH» statt «de-CH».
 const langOf = (v) => (v.lang ?? '').replace('_', '-').toLowerCase();
 
+export function allVoices() {
+  if (!supported) return [];
+  try {
+    return speechSynthesis.getVoices();
+  } catch {
+    return [];
+  }
+}
+
 export function germanVoices() {
   if (!supported) return [];
   try {

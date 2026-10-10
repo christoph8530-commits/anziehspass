@@ -1315,6 +1315,10 @@ button {
   display: none;
 }
 
+#voice-rate {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 #voice-rate .text-btn.active {
   box-shadow: inset 0 0 0 3px #5c6bc0;
 }

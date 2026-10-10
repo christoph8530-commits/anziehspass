@@ -11,6 +11,7 @@ import {
   say,
   supported as speechSupported,
   germanVoices,
+  allVoices,
   currentVoiceUri,
   currentRate,
   setVoice,
@@ -299,7 +300,7 @@ function renderVoice() {
     `<option value="${value}"${value === (uri ?? '') ? ' selected' : ''}>${label}</option>`;
   $('#voice-select').innerHTML =
     option('', 'Stimme des Geräts (empfohlen)') + voices.map((v) => option(v.voiceURI, `${v.name} (${v.lang})`)).join('');
-  $('#voice-select').hidden = !speechSupported || voices.length === 0;
+  $('#voice-select').hidden = !speechSupported;
   for (const b of document.querySelectorAll('#voice-rate [data-rate]')) {
     b.classList.toggle('active', Number(b.dataset.rate) === currentRate());
   }
@@ -325,8 +326,14 @@ function renderSpeechStatus(st) {
   } else if (st.state === 'silent') {
     text =
       '✗ Keine Rückmeldung vom Sprachdienst. Android-Einstellungen → Sprachausgabe: bevorzugtes Modul wählen und Deutsch installieren, dann App neu starten.';
-  } else if (voices === 0) {
-    text = 'Keine deutsche Stimme gefunden. Android-Einstellungen → Sprachausgabe → Deutsch installieren.';
+  }
+  // Welche Stimmen hat das Gerät überhaupt? (zeigt sofort, ob Deutsch fehlt)
+  const all = allVoices().length;
+  if (speechSupported) {
+    const found = voices
+      ? `${voices} deutsche Stimme${voices === 1 ? '' : 'n'} gefunden.`
+      : `${all} Stimme${all === 1 ? '' : 'n'} gefunden, keine deutsche. Deutsch installieren: Einstellungen → Allgemeine Verwaltung → Sprache → Text-in-Sprache → beim Modul ⚙️ → Stimmdaten installieren → Deutsch.`;
+    text = text ? `${text} ${found}` : found;
   }
   $('#voice-hint').textContent = text;
 }
