@@ -1,7 +1,7 @@
 // Service Worker: macht die App offline-fähig.
 // Bei Änderungen an der App VERSION hochzählen, damit Handys die neue Version laden.
 
-const VERSION = 'v11';
+const VERSION = 'v12';
 const CACHE = `anziehspass-${VERSION}`;
 
 const EMOJI = [

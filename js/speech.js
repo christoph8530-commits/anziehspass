@@ -7,7 +7,8 @@
 import * as store from './storage.js';
 
 export const supported = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
-const settings = { uri: null, rate: 1, ...store.load('voice', {}) };
+// Tempo 1.25 als Standard: 1.0 klingt mit den Android-Stimmen langsam und abgehackt
+const settings = { uri: null, rate: 1.25, ...store.load('voice', {}) };
 let voice = null; // nur gesetzt, wenn die Eltern eine bestimmte Stimme gewählt haben
 let generation = 0; // jede neue Ansage erhöht den Zähler; alte Wiederholungen verfallen
 const listeners = new Set();
