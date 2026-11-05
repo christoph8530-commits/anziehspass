@@ -1032,23 +1032,15 @@ button {
 }
 
 /* Memory */
+/* Spalten und Kartengrösse berechnet fitCards() in games.js, damit nie gescrollt werden muss */
 #game-tray.memory {
   display: grid;
-  grid-template-columns: repeat(var(--cols, 3), min(21vw, 150px, 15vh));
-  grid-auto-rows: min(21vw, 150px, 15vh);
+  grid-template-columns: repeat(var(--cols, 3), var(--card, 80px));
+  grid-auto-rows: var(--card, 80px);
+  gap: 10px;
   justify-content: center;
-}
-
-#game-tray.memory.cols-3 {
-  --cols: 3;
-}
-
-#game-tray.memory.cols-4 {
-  --cols: 4;
-}
-
-#game-tray.memory.cols-5 {
-  --cols: 5;
+  align-content: center;
+  overflow: hidden;
 }
 
 .card {
@@ -1265,11 +1257,6 @@ button {
     border-radius: 24px 0 0 0;
   }
 
-  #game-tray.memory {
-    grid-template-columns: repeat(var(--cols, 3), min(10vw, 130px, 20vh));
-    grid-auto-rows: min(10vw, 130px, 20vh);
-    align-content: center;
-  }
 
   #screen-games {
     justify-content: center;

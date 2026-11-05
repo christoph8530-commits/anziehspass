@@ -86,6 +86,7 @@ function resetBoard() {
   overlay().innerHTML = '';
   tray().innerHTML = '';
   tray().className = '';
+  tray().removeAttribute('style');
   setSky(null);
   $('#game-win').hidden = true;
 }
@@ -237,6 +238,28 @@ async function playWeather(s) {
 
 // --- Memory ---------------------------------------------------------------------------
 
+const CARD_GAP = 10;
+const CARD_MAX = 170;
+
+// Karten so gross wie möglich machen, aber alle müssen ohne Scrollen sichtbar sein:
+// alle Aufteilungen in Spalten/Reihen durchprobieren und die mit den grössten Karten nehmen.
+function fitCards() {
+  const t = tray();
+  if (!t.classList.contains('memory')) return;
+  const n = t.children.length;
+  const cs = getComputedStyle(t);
+  const width = t.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const height = t.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+  let best = { size: 0, cols: n };
+  for (let cols = 1; cols <= n; cols++) {
+    const rows = Math.ceil(n / cols);
+    const size = Math.min((width - CARD_GAP * (cols - 1)) / cols, (height - CARD_GAP * (rows - 1)) / rows);
+    if (size > best.size) best = { size, cols };
+  }
+  t.style.setProperty('--cols', best.cols);
+  t.style.setProperty('--card', `${Math.floor(Math.min(best.size, CARD_MAX))}px`);
+}
+
 async function playMemory(s) {
   const pairs = [3, 4, 5, 6][Math.min(level.memory, 3)];
   outfit = {};
@@ -246,7 +269,7 @@ async function playMemory(s) {
     .slice(0, pairs)
     .map((slot) => pick(ITEMS.filter((i) => i.slot === slot)).id);
   const cards = shuffle([...items, ...items]);
-  tray().className = `memory cols-${pairs === 6 ? 4 : pairs}`;
+  tray().className = 'memory';
   tray().innerHTML = cards
     .map(
       (id, i) =>
@@ -254,6 +277,7 @@ async function playMemory(s) {
         `<span class="face front">${thumbHTML(ITEMS_BY_ID[id])}</span></button>`
     )
     .join('');
+  fitCards();
   stars(pairs, 0);
   prompt('Finde zwei gleiche Bilder!');
 
@@ -454,6 +478,8 @@ function openMenu() {
 
 export function initGames(options) {
   ctx = options;
+
+  window.addEventListener('resize', fitCards);
 
   $('#games-grid').addEventListener('click', (e) => {
     const tile = e.target.closest('[data-game]');
